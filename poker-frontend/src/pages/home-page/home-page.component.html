@@ -1,4 +1,9 @@
-<button (click)="getInfo()">Click Me to Fetch Info!</button>
+<label for="id">ID: </label>
+<input id="id" type="text" [formControl]="form">
 
+<label for="pL">P/L: </label>
+<input id="pL" type="text" [formControl]="form">
 
 <h1>{{response}}</h1>
+
+<button (click)="getInfo()">Click Me to Fetch Info!</button>
