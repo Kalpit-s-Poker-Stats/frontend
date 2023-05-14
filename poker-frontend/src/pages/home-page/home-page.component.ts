@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClient } from '@angular/common/http';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'home-page',
@@ -13,6 +14,8 @@ export class HomePageComponent {
   name: string | undefined;
   winnings: number | undefined;
   response: Object | undefined;
+
+  form = new FormControl('');
 
   constructor(private http: HttpClient) { }
 
