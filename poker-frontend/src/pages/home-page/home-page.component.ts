@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import { HttpClient,  HttpHeaders } from '@angular/common/http';
-import { FormControl } from '@angular/forms';
-import { Injectable } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 
@@ -11,35 +10,33 @@ import { catchError, retry } from 'rxjs/operators';
   styleUrls: ['./home-page.component.css']
 })
 
-@Injectable()
-export class ConfigService {
-  constructor(private http: HttpClient) { }
-}
 
-export class HomePageComponent implements OnInit{
+export class HomePageComponent{
 
   url = 'http://147.135.113.14:5000/v1/account/hello';
   name: string | undefined;
   winnings: number | undefined;
   response: Object | undefined;
 
-  form = new FormControl('');
+  sessionEntry = new FormGroup({
+    id: new FormControl(),
+    winnings: new FormControl(),
+    buy_in_amount: new FormControl(),
+    buy_out_amount: new FormControl(),
+    location: new FormControl(''),
+    date: new FormControl(''),
+  });
 
   constructor(private http: HttpClient) { }
 
-  ngOnInit(): void {
-    let headers = ({});
-    this.http.get<any>('(Enter API URL HERE', { 
-      headers: headers 
-    }).subscribe(data=> {
-      console.log(data)
-    });
-  }
 
   getInfo() {
     this.http.get(this.url).subscribe((res) => {
       this.response = res;
     })
+  }
+  onSubmit() {
+    console.log(this.sessionEntry.value);
   }
 
 }
