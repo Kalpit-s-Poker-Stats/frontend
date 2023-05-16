@@ -1,0 +1,7 @@
+Ticket 1 (Bittu):
+    - Create entry form for session & make API call to add to table
+        - form with id, winnings, buy_in_amount, buy_out_amount, date
+
+        https://angular.io/guide/reactive-forms
+
+        
