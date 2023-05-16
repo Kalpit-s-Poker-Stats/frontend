@@ -36,7 +36,18 @@ export class HomePageComponent{
     })
   }
   onSubmit() {
-    console.log(this.sessionEntry.value);
+    const sessionForm = this.sessionEntry.value;
+    this.http.post('http://147.135.113.14:5000/v1/session/entry' +
+    '?id='+ sessionForm.id +
+    '&winnings=' + sessionForm.winnings +
+    '&buy_in_amount=' + sessionForm.buy_in_amount +
+    '&buy_out_amount=' + sessionForm.buy_out_amount +
+    '&location=' + sessionForm.location +
+    '&date=' + sessionForm.date , sessionForm)
+
+    .subscribe((res) => {
+
+    });
   }
 
 }
