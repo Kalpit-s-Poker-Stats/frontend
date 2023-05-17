@@ -1,7 +1,12 @@
-Ticket 1 (Bittu):
+Ticket 1 (Bittu): DONE
     - Create entry form for session & make API call to add to table
         - form with id, winnings, buy_in_amount, buy_out_amount, date
 
         https://angular.io/guide/reactive-forms
 
         
+
+Ticket 2 (Bittu):
+    - Create and style the homepage based on the given design
+    - Connect the two tiles to the correct page
+
