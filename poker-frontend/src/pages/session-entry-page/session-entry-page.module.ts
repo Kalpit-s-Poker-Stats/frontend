@@ -1,15 +1,15 @@
 import { AppRoutingModule } from "src/app/app-routing.module";
-import { HomePageComponent } from "./home-page.component";
 import { HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from "@angular/platform-browser";
+import { SessionEntryPageComponent } from "./session-entry-page.component";
 
 @NgModule({
   declarations: [
-    HomePageComponent
+    SessionEntryPageComponent
   ],
-  exports: [HomePageComponent],
+  exports: [SessionEntryPageComponent],
   imports: [
     AppRoutingModule,
     HttpClientModule,
@@ -18,4 +18,4 @@ import { BrowserModule } from "@angular/platform-browser";
   ],
   providers: []
 })
-export class HomePageModule { }
+export class SessionEntryPageModule { }
