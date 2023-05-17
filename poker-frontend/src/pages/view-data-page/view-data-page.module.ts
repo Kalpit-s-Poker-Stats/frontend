@@ -1,15 +1,15 @@
 import { AppRoutingModule } from "src/app/app-routing.module";
-import { HomePageComponent } from "./home-page.component";
 import { HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from "@angular/platform-browser";
+import { ViewDataPageComponent } from "./view-data-page.component";
 
 @NgModule({
   declarations: [
-    HomePageComponent
+    ViewDataPageComponent
   ],
-  exports: [HomePageComponent],
+  exports: [ViewDataPageComponent],
   imports: [
     AppRoutingModule,
     HttpClientModule,
@@ -18,4 +18,4 @@ import { BrowserModule } from "@angular/platform-browser";
   ],
   providers: []
 })
-export class HomePageModule { }
+export class ViewDataPageModule { }
