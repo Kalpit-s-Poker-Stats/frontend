@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 
 import { HttpClientModule } from '@angular/common/http';
 import { HomePageModule } from 'src/pages/home-page/home-page.module';
-import { HomePageComponent } from 'src/pages/home-page/home-page.component';
+import { SessionEntryPageModule } from 'src/pages/session-entry-page/session-entry-page.module';
 
 @NgModule({
   declarations: [
@@ -16,7 +16,8 @@ import { HomePageComponent } from 'src/pages/home-page/home-page.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    HomePageModule
+    HomePageModule,
+    SessionEntryPageModule
   ],
   providers: [],
   bootstrap: [AppComponent]
