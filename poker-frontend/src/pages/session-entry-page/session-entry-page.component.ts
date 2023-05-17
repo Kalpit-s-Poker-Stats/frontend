@@ -26,13 +26,6 @@ export class SessionEntryPageComponent {
 
   constructor(private http: HttpClient) { }
 
-
-  getInfo() {
-    this.http.get(this.url).subscribe((res) => {
-      this.response = res;
-    })
-  }
-
   onSubmit() {
     const sessionForm = this.sessionEntry.value;
     const entry = {
