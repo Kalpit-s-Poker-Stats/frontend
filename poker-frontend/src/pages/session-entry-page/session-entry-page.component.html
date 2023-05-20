@@ -1,34 +1,40 @@
-<div class = 'container'>
-    <h1 class="title">Session Entry Logger</h1>
-    <form [formGroup]="sessionEntry" (ngSubmit)="onSubmit()" class='form'>
-        <div class="formGroup">
-            <label for="id">ID: </label>
-            <input id="id" type="number" min="1" formControlName="id">
-        </div>
-        <div class="formGroup">
-            <label for="winnings">Profit/Loss: </label>
-            <input id="winnings" type="number" formControlName="winnings">
-        </div>
-        <div class="formGroup">
-            <label for="buy_in_amount">Buy In Amount: </label>
-            <input id="buy_in_amount" type="number" formControlName="buy_in_amount">
-        </div>
-        <div class="formGroup">
-            <label for="buy_out_amount">Buy Out Amount: </label>
-            <input id="buy_out_amount" type="number" formControlName="buy_out_amount">
-        </div>
-        <div class="formGroup">
-            <label for="location">Location: </label>
-            <input id="location" type="text" formControlName="location">
-        </div>
-        <div class="formGroup">
-            <label for="date">Date: </label>
-            <input id="date" type="date" formControlName="date">
-        </div>
-        <button type="submit" class='submitButton' [disabled]="!sessionEntry.valid">Submit</button>
-    </form>
-</div>
-
-<div class="alert alert-success" role="alert" *ngIf="added">
-    <h1 class="entry_added">{{added}}</h1>
+<div class="grid-container">
+  <div class="row1">
+    <h1 class="title">Poker Tracker</h1>
+    <h1 class="pageTitle">Session Entry Logger</h1>
+  </div>
+  <div class = 'container'>
+      <form [formGroup]="sessionEntry" (ngSubmit)="onSubmit()" class='form'>
+          <div class="formGroup">
+              <label for="id">ID: </label>
+              <input id="id" type="number" min="1" formControlName="id">
+          </div>
+          <div class="formGroup">
+              <label for="winnings">Profit/Loss: </label>
+              <input id="winnings" type="number" formControlName="winnings">
+          </div>
+          <div class="formGroup">
+              <label for="buy_in_amount">Buy In Amount: </label>
+              <input id="buy_in_amount" type="number" formControlName="buy_in_amount">
+          </div>
+          <div class="formGroup">
+              <label for="buy_out_amount">Buy Out Amount: </label>
+              <input id="buy_out_amount" type="number" formControlName="buy_out_amount">
+          </div>
+          <div class="formGroup">
+              <label for="location">Location: </label>
+              <input id="location" type="text" formControlName="location">
+          </div>
+          <div class="formGroup">
+              <label for="date">Date: </label>
+              <input id="date" type="date" formControlName="date">
+          </div>
+          <button type="submit" class='submitButton' [disabled]="!sessionEntry.valid">Submit</button>
+      </form>
+  </div>
+    <div class="alertRow">
+      <div class="alert alert-success" role="alert" *ngIf="added">
+          <h1 class="entry_added">{{added}}</h1>
+      </div>
+    </div>
 </div>

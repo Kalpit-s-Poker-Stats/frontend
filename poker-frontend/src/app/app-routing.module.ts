@@ -5,7 +5,7 @@ import { SessionEntryPageComponent } from 'src/pages/session-entry-page/session-
 import { ViewDataPageComponent } from 'src/pages/view-data-page/view-data-page.component';
 
 const routes: Routes = [
-  { path: 'home', component: HomePageComponent },
+  { path: '', component: HomePageComponent },
   { path: 'session-entry', component: SessionEntryPageComponent },
   { path: 'view-data', component: ViewDataPageComponent },
 ];
