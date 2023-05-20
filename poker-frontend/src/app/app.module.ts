@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { HomePageModule } from 'src/pages/home-page/home-page.module';
 import { SessionEntryPageModule } from 'src/pages/session-entry-page/session-entry-page.module';
 import { ViewDataPageModule } from 'src/pages/view-data-page/view-data-page.module';
+import { NavBarModule } from 'src/components/nav-bar/nav-bar.module';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { ViewDataPageModule } from 'src/pages/view-data-page/view-data-page.modu
     HttpClientModule,
     HomePageModule,
     SessionEntryPageModule,
-    ViewDataPageModule
+    ViewDataPageModule,
+    NavBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

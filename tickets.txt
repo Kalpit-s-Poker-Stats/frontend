@@ -6,7 +6,11 @@ Ticket 1 (Bittu): DONE
 
         
 
-Ticket 2 (Bittu):
+Ticket 2 (Bittu): DONE
     - Create and style the homepage based on the given design
     - Connect the two tiles to the correct page
 
+
+
+Ticket 3 (Bittu): 
+    - 
