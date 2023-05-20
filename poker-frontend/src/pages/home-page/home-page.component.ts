@@ -12,8 +12,8 @@ export class HomePageComponent{
 
   constructor(private router: Router) { }
 
-  navigateUser() {
-    this.router.navigate(['/session-entry']);
+  navigateUser(page: string) {
+    this.router.navigate([page]);
   }
 
 }
