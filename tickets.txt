@@ -13,4 +13,5 @@ Ticket 2 (Bittu): DONE
 
 
 Ticket 3 (Bittu): 
-    - 
+    - Create and style navigation bar
+    - Connect the nav bar to the different component pages
