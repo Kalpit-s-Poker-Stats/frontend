@@ -1,28 +1,31 @@
 @import "~bootstrap/dist/css/bootstrap.css";
   .wrapper {
     background-color: #121212;
+    height: 100vh;
+    width:100vw;
   }
 
   .container {
       max-width: 500px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color:#121212;
-    }
+      padding: 5px;
+  }
+  mat-card {
+    background-color: #1f1f1f;
+  }
+  mat-form-field {
+    width: 100%;
+  }
 
   .form {
-    background-color: #1f1f1f;
-    padding-left: 10%;
-    padding-bottom: 4%;
-    padding-right: 10%;
-    padding-top: 5%;
+    padding-top: 7%;
     color: whitesmoke;
     font-family: 'Raleway',sans-serif;
-    font-size: 16px;
+    font-size: 20px;
   }
 
   .formGroup {
-    margin-bottom: 3%;
+    margin-top: 10%;
+    margin-bottom: 10%;
     justify-content: center;
   }
   .submitButton {
@@ -41,7 +44,7 @@
   font-weight: bold;
   transition: .2s;
   overflow: hidden;
-  margin-right: 50px;
+  margin: 2%;
   background-color: #121212;
 }
 
