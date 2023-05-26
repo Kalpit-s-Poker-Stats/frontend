@@ -11,6 +11,7 @@ import { ViewDataPageModule } from 'src/pages/view-data-page/view-data-page.modu
 import { NavBarModule } from 'src/components/nav-bar/nav-bar.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,7 +24,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     SessionEntryPageModule,
     ViewDataPageModule,
     NavBarModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
