@@ -8,21 +8,6 @@
     background-color: #121212;
   }
 
-  .title{
-    padding-top: 1%;
-    padding-left: 1%;
-    justify-content: left;
-    display:flex;
-    color:whitesmoke;
-  }
-
-  .pageTitle{
-    padding-top: 1%;
-    justify-content: center;
-    display:flex;
-    color:whitesmoke;
-  }
-
   .wrapper{
     display: flex;
     justify-content: center;
@@ -70,15 +55,5 @@
                 0 0 200px #00f7ff;
 
     -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
-  }
-
-  .grid-container {
-    display: grid;
-    grid-template-rows: 120px 800px 100px 100px;
-    background-color: #121212;
-  }
-
-  .row1 {
-    grid-row: 1 / 2;
   }
 
