@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ViewDataPageComponent } from './view-data-page.component';
 
 describe('ViewDataPageComponent', () => {
@@ -8,7 +7,7 @@ describe('ViewDataPageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ViewDataPageComponent]
+      declarations: [ViewDataPageComponent],
     });
     fixture = TestBed.createComponent(ViewDataPageComponent);
     component = fixture.componentInstance;
@@ -19,3 +18,7 @@ describe('ViewDataPageComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+
+
+
+

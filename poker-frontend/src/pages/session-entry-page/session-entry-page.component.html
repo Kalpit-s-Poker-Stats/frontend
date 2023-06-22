@@ -1,31 +1,48 @@
 <div class="wrapper">
   <div class = 'container'>
         <form [formGroup]="sessionEntry" (ngSubmit)="onSubmit()" class='form'>
-            <div class="formGroup">
-                <label for="id">ID: </label>
-                <input id="id" type="number" min="1" formControlName="id">
-            </div>
-            <div class="formGroup">
-                <label for="winnings">Profit/Loss: </label>
-                <input id="winnings" type="number" formControlName="winnings">
-            </div>
-            <div class="formGroup">
-                <label for="buy_in_amount">Buy In Amount: </label>
-                <input id="buy_in_amount" type="number" formControlName="buy_in_amount">
-            </div>
-            <div class="formGroup">
-                <label for="buy_out_amount">Buy Out Amount: </label>
-                <input id="buy_out_amount" type="number" formControlName="buy_out_amount">
-            </div>
-            <div class="formGroup">
-                <label for="location">Location: </label>
-                <input id="location" type="text" formControlName="location">
-            </div>
-            <div class="formGroup">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Session Information Logger</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="formGroup">
+                 <mat-form-field>
+                    <input id="id" formControlName='id' matInput placeholder="ID"/>
+                 </mat-form-field>
+              </div>
+              <div class="formGroup">
+                <mat-form-field>
+                   <input id="winnings" formControlName='winnings' matInput placeholder="Profit/Loss"/>
+                </mat-form-field>
+              </div>
+              <div class="formGroup">
+                <mat-form-field>
+                  <input id="buy_in_amount" formControlName='buy_in_amount' matInput placeholder="Buy In Amount"/>
+                </mat-form-field>
+              </div>
+              <div class="formGroup">
+                <mat-form-field>
+                  <input id="buy_out_amount" formControlName='buy_out_amount' matInput placeholder="Buy Out Amount">
+                </mat-form-field>
+              </div>
+              <div class="formGroup">
+                <mat-form-field>
+                  <mat-label>Select an option</mat-label>
+                  <mat-select>
+                    <mat-option id="location" *ngFor="let option of locations" [value]="option">{{option}}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="formGroup">
                 <label for="date">Date: </label>
                 <input id="date" type="date" formControlName="date">
-            </div>
-            <button type="submit" class='submitButton' [disabled]="!sessionEntry.valid">Submit</button>
+              </div>
+            </mat-card-content>
+            <mat-card-actions>
+              <button type="submit" class='submitButton' [disabled]="!sessionEntry.valid">Submit</button>
+            </mat-card-actions>
+          </mat-card>
         </form>
           <div class="alert alert-success" role="alert" *ngIf="added">
               <h1 class="entry_added">{{added}}</h1>
