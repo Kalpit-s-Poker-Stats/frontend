@@ -1,32 +1,38 @@
 @import "~bootstrap/dist/css/bootstrap.css";
   .wrapper {
     background-color: #121212;
+    height: 100vh;
+    width:100vw;
   }
 
   .container {
       max-width: 500px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color:#121212;
-    }
+      padding: 5px;
+  }
+  mat-card {
+    background-color: #181818;
+  }
+  mat-form-field {
+    width: 100%;
+  }
 
   .form {
-    background-color: #1f1f1f;
-    padding-left: 10%;
-    padding-bottom: 4%;
-    padding-right: 10%;
-    padding-top: 5%;
-    color: whitesmoke;
+    padding-top: 7%;
+    color: rgb(141, 141, 141);
     font-family: 'Raleway',sans-serif;
-    font-size: 16px;
+    font-size: 20px;
   }
 
   .formGroup {
-    margin-bottom: 3%;
+    margin-top: 10%;
+    margin-bottom: 10%;
     justify-content: center;
   }
   .submitButton {
     width: 100%;
+  }
+  mat-card-title{
+    color: #BB86FC;
   }
 
  button{
@@ -36,22 +42,22 @@
   border:none;
   text-transform: uppercase;
   letter-spacing: 4px;
-  color: whitesmoke;
+  color: #888888;
   font-size: 1.2rem;
   font-weight: bold;
   transition: .2s;
   overflow: hidden;
-  margin-right: 50px;
+  margin: 2%;
   background-color: #121212;
 }
 
 button:hover{
-  background-color: whitesmoke;
+  background-color: #BB86FC;
   color: #050801;
-  box-shadow: 0 0 5px whitesmoke,
-              0 0 25px whitesmoke,
-              0 0 50px whitesmoke,
-              0 0 200px whitesmoke;
+  box-shadow: 0 0 5px #BB86FC,
+              0 0 25px #BB86FC,
+              0 0 50px #BB86FC,
+              0 0 200px #BB86FC;
 
   -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
 }
