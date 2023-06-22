@@ -15,3 +15,25 @@ Ticket 2 (Bittu): DONE
 Ticket 3 (Bittu): 
     - Create and style navigation bar
     - Connect the nav bar to the different component pages
+
+
+Ticket 4 () :
+    - figure out how we need to parse the data
+    - parse the data from user_data endpoint and attempt to display it onto a card (simple line graph winnings vs date)
+
+
+Ticket 5 () : Backend
+    - need to make beg_date and end_date optional in endpoint
+
+
+Ticket 6 () : Frontend
+    - make beg_date and end_date optional in form and test
+
+
+Ticket 7 () : 
+    - hide the charts before the form is submitted on view-data-page
+    - display the charts once the form is submitted and we get the response from user_data endpoint
+
+
+Ticket 8 () :
+    - create a log in system where user enters id and password
