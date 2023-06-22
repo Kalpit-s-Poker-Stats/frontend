@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
+
 @Component({
   selector: 'app-session-entry-page',
   templateUrl: './session-entry-page.component.html',
@@ -24,9 +25,16 @@ export class SessionEntryPageComponent {
     date: new FormControl(''),
   });
 
+  locations: string[] = [
+    'Home',
+    'Online',
+    'Casino',
+  ]
+
   constructor(private http: HttpClient) { }
 
   onSubmit() {
+    console.log();
     const sessionForm = this.sessionEntry.value;
     const entry = {
       id: sessionForm.id,
