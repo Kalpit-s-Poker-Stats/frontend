@@ -1,3 +1,22 @@
+<div class="wrapper">
+    <div class = 'container'>
+          <form [formGroup]="viewData" (ngSubmit)="getInfo()" class='form'>
+              <div class="formGroup">
+                  <label for="id">ID: </label>
+                  <input id="id" type="number" min="1" formControlName="id">
+              </div>
+              <div class="formGroup">
+                <label for="beg_date">Beginning Date: </label>
+                <input id="beg_date" type="date" formControlName="beg_date">
+            </div>
+            <div class="formGroup">
+                <label for="end_date">End Date: </label>
+                <input id="end_date" type="date" formControlName="end_date">
+            </div>
+            <button type="submit" class='submitButton' [disabled]="!viewData.valid">Submit</button>
+            </form>
+    </div>
+</div>    
 <div class="grid-container">
   <h1 class="mat-h1">Charts</h1>
   <mat-grid-list cols="2" rowHeight="350px">
