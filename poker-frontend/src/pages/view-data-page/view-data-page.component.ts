@@ -26,11 +26,9 @@ export class ViewDataPageComponent {
   getInfo() {
     const userInput = this.viewData.value;
     const urlWithParams = 'session/user_data?id=' + userInput.id + '&beg_date=' + this.formatDateForApi(userInput.beg_date) + '&end_date=' + this.formatDateForApi(userInput.end_date);
-    console.log(urlWithParams);
 
     this.http.get(this.url + urlWithParams)
     .subscribe((res) => {
-      console.log(res);
       this.response = res;
     })
   }
