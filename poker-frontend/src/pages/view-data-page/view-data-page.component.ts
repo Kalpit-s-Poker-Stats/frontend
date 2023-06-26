@@ -65,6 +65,22 @@ export class ViewDataPageComponent {
     })
   );
 
+
+  getWinningsAndDate(apiResponse: any) {
+    let winsAndDates = new Map();
+    apiResponse.forEach((session: any) => {
+      if(winsAndDates.get(session.date)){
+        if(!Array.isArray(winsAndDates.get(session.date))){
+          winsAndDates.set(session.date, [winsAndDates.get(session.date), session.winnings]);
+        } else {
+          winsAndDates.set(session.date, winsAndDates.get(session.date).concat(session.winnings))
+        }
+      } else {
+        winsAndDates.set(session.date, session.winnings);
+      }
+    })
+  }
+
 }
 
 

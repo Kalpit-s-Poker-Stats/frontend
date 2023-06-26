@@ -37,3 +37,9 @@ Ticket 7 () :
 
 Ticket 8 () :
     - create a log in system where user enters id and password
+
+Ticket 9 () : 
+    - update ReadMes for both repos
+
+Ticket 10 () :
+    - host the front end repo onto the sever
