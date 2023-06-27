@@ -14,6 +14,7 @@ export class ViewDataPageComponent {
 
   url = 'http://147.135.113.14:5000/v1/';
   response: any;
+  public chart: any;
 
   viewData = new FormGroup({
     id: new FormControl(),
@@ -31,6 +32,8 @@ export class ViewDataPageComponent {
     .subscribe((res) => {
       this.response = res;
     })
+
+    this.createLineChart(this.getWinningsAndDate(this.response));
   }
 
   formatDateForApi(dateString: string): string {
@@ -70,17 +73,64 @@ export class ViewDataPageComponent {
     let winsAndDates = new Map();
     apiResponse.forEach((session: any) => {
       if(winsAndDates.get(session.date)){
-        if(!Array.isArray(winsAndDates.get(session.date))){
-          winsAndDates.set(session.date, [winsAndDates.get(session.date), session.winnings]);
-        } else {
-          winsAndDates.set(session.date, winsAndDates.get(session.date).concat(session.winnings))
+        let i = 2;
+        while(winsAndDates.has(session.date + " session " + i)){
+          i++;
         }
+        winsAndDates.set(session.date + " session " + i, session.winnings);
       } else {
         winsAndDates.set(session.date, session.winnings);
       }
     })
+    return winsAndDates;
+  }
+
+  createLineChart(data: Map<string, number>) {
+    let pointBackgroundColors: any = [];
+    let [sessions, winnings] = this.getLineChartFormat(data);
+    this.chart = new Chart("WinningsOverTime", {
+      type: 'line',
+      data: {
+        labels: sessions,
+        datasets: [
+          {
+          label: "Winnings",
+          data: winnings,
+          backgroundColor: 'black',
+          borderColor: 'black',
+          pointBackgroundColor: pointBackgroundColors
+          }
+        ]
+      },
+      options: {
+        aspectRatio: 5
+      }
+    });
+
+    let i = 0;
+
+    for (i = 0; i < this.chart.data.datasets[0].data.length; i++) {
+      if (this.chart.data.datasets[0].data[i] > 0) {
+          pointBackgroundColors.push("#90cd8a");
+      } else {
+          pointBackgroundColors.push("#f58368");
+      }
+    }
+
+    this.chart.update();
+
+  }
+
+  getLineChartFormat(data: any): [string[], number[]] {
+    // data = new Map([...data.entries()].sort());
+    let sessions: string[] = [];
+    let winnings: number[] = [];
+    data.forEach((value: number, key: string) => {
+      sessions.push(key);
+      winnings.push(value);
+    })
+
+    return [sessions, winnings];
   }
 
 }
-
-
