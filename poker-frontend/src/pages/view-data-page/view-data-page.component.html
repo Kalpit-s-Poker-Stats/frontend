@@ -1,45 +1,38 @@
 <div class="wrapper">
-    <div class = 'container'>
-          <form [formGroup]="viewData" (ngSubmit)="getInfo()" class='form'>
-              <div class="formGroup">
-                  <label for="id">ID: </label>
-                  <input id="id" type="number" min="1" formControlName="id">
-              </div>
-              <div class="formGroup">
-                <label for="beg_date">Beginning Date: </label>
-                <input id="beg_date" type="date" formControlName="beg_date">
-            </div>
-            <div class="formGroup">
-                <label for="end_date">End Date: </label>
-                <input id="end_date" type="date" formControlName="end_date">
-            </div>
-            <button type="submit" class='submitButton' [disabled]="!viewData.valid">Submit</button>
-            </form>
-    </div>
-</div>
-<div class="grid-container">
-  <h1 class="mat-h1">Charts</h1>
-  <mat-grid-list cols="2" rowHeight="350px">
-    <mat-grid-tile *ngFor="let card of cards | async" [colspan]="card.cols" [rowspan]="card.rows">
-      <mat-card class="dashboard-card">
+  <div class = 'container'>
+    <form [formGroup]="viewData" (ngSubmit)="getInfo()" class='form'>
+      <mat-card>
         <mat-card-header>
-          <mat-card-title>
-            {{card.title}}
-            <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu" xPosition="before">
-              <button mat-menu-item>Expand</button>
-              <button mat-menu-item>Remove</button>
-            </mat-menu>
-          </mat-card-title>
+          <mat-card-title>View Data</mat-card-title>
         </mat-card-header>
-        <mat-card-content class="dashboard-card-content">
-          <div class="chart-container">
-            <canvas id="WinningsOverTime">{{chart}}</canvas>
+        <mat-card-content>
+          <div class="formGroup">
+            <mat-form-field>
+              <input id="id" formControlName='id' matInput placeholder="ID"/>
+            </mat-form-field>
           </div>
+          <div class="formGroup">
+            <label for="beg_date">Beginning Date: </label>
+            <input id="beg_date" type="date" formControlName="beg_date">
+          </div>
+          <div class="formGroup">
+            <label for="end_date">End Date: </label>
+            <input id="end_date" type="date" formControlName="end_date">
+          </div>
+            <button type="submit" class='submitButton' [disabled]="!viewData.valid">Submit</button>
         </mat-card-content>
       </mat-card>
-    </mat-grid-tile>
-  </mat-grid-list>
+    </form>
+  </div>
 </div>
+<div *ngIf="shouldShowCard">
+  <div class="chart-container">
+    <mat-card class="chart-card">
+      <h1 class="mat-h1">Charts</h1>
+      <mat-card-content class="chart-content">
+          <canvas id="WinningsOverTime">{{chart}}</canvas>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+

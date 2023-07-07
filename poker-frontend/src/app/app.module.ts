@@ -16,11 +16,13 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { NgChartsModule } from 'ng2-charts';
+import { ChartsComponent } from '../pages/charts/charts.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
+    ChartsComponent,
   ],
   imports: [
     BrowserModule,

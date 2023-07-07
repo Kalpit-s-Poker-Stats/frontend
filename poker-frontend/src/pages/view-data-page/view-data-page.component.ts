@@ -1,8 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Component, inject } from '@angular/core';
-import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
-import { map } from 'rxjs/operators';
 import { Chart } from 'chart.js';
 
 @Component({
@@ -15,7 +13,9 @@ export class ViewDataPageComponent {
   url = 'http://147.135.113.14:5000/v1/';
   response: any;
   public chart: any;
-
+  retrievedData: Map<string, number>;
+  shouldShowCard: boolean = true;
+  userInput: any;
   viewData = new FormGroup({
     id: new FormControl(),
     beg_date: new FormControl(),
@@ -25,15 +25,27 @@ export class ViewDataPageComponent {
   constructor(private http: HttpClient) { }
 
   getInfo() {
-    const userInput = this.viewData.value;
-    const urlWithParams = 'session/user_data?id=' + userInput.id + '&beg_date=' + this.formatDateForApi(userInput.beg_date) + '&end_date=' + this.formatDateForApi(userInput.end_date);
-
+    this.destroyChart();
+    this.userInput = this.viewData.value;
+    const urlWithParams = 'session/user_data?id='
+                            + this.userInput.id
+                            + '&beg_date='
+                            + this.formatDateForApi(this.userInput.beg_date)
+                            + '&end_date='
+                            + this.formatDateForApi(this.userInput.end_date);
     this.http.get(this.url + urlWithParams)
-    .subscribe((res) => {
-      this.response = res;
-    })
+      .subscribe((res) => {
+        this.response = res;
+        this.retrievedData = this.getWinningsAndDate(this.response);
+        this.createLineChart(this.retrievedData);
+      });
 
-    this.createLineChart(this.getWinningsAndDate(this.response));
+  }
+
+  destroyChart() {
+    if (this.chart) {
+      this.chart.destroy();
+    }
   }
 
   formatDateForApi(dateString: string): string {
@@ -45,36 +57,13 @@ export class ViewDataPageComponent {
     const formattedDate = `${month}%2F${day}%2F${year}`;
     return formattedDate;
   }
-  private breakpointObserver = inject(BreakpointObserver);
-
-  /** Based on the screen size, switch from standard to one column per row */
-  cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-    map(({ matches }) => {
-      if (matches) {
-        return [
-          { title: 'Card 1', cols: 1, rows: 1 },
-          { title: 'Card 2', cols: 1, rows: 1 },
-          { title: 'Card 3', cols: 1, rows: 1 },
-          { title: 'Card 4', cols: 1, rows: 1 }
-        ];
-      }
-
-      return [
-        { title: 'Card 1', cols: 2, rows: 1 },
-        { title: 'Card 2', cols: 1, rows: 1 },
-        { title: 'Card 3', cols: 1, rows: 2 },
-        { title: 'Card 4', cols: 1, rows: 1 }
-      ];
-    })
-  );
-
 
   getWinningsAndDate(apiResponse: any) {
     let winsAndDates = new Map();
     apiResponse.forEach((session: any) => {
-      if(winsAndDates.get(session.date)){
+      if (winsAndDates.get(session.date)) {
         let i = 2;
-        while(winsAndDates.has(session.date + " session " + i)){
+        while (winsAndDates.has(session.date + " session " + i)) {
           i++;
         }
         winsAndDates.set(session.date + " session " + i, session.winnings);
@@ -94,11 +83,11 @@ export class ViewDataPageComponent {
         labels: sessions,
         datasets: [
           {
-          label: "Winnings",
-          data: winnings,
-          backgroundColor: 'black',
-          borderColor: 'black',
-          pointBackgroundColor: pointBackgroundColors
+            label: "Winnings",
+            data: winnings,
+            backgroundColor: 'black',
+            borderColor: 'black',
+            pointBackgroundColor: pointBackgroundColors
           }
         ]
       },
@@ -111,9 +100,9 @@ export class ViewDataPageComponent {
 
     for (i = 0; i < this.chart.data.datasets[0].data.length; i++) {
       if (this.chart.data.datasets[0].data[i] > 0) {
-          pointBackgroundColors.push("#90cd8a");
+        pointBackgroundColors.push("#90cd8a");
       } else {
-          pointBackgroundColors.push("#f58368");
+        pointBackgroundColors.push("#f58368");
       }
     }
 
@@ -122,7 +111,6 @@ export class ViewDataPageComponent {
   }
 
   getLineChartFormat(data: any): [string[], number[]] {
-    // data = new Map([...data.entries()].sort());
     let sessions: string[] = [];
     let winnings: number[] = [];
     data.forEach((value: number, key: string) => {
@@ -132,5 +120,5 @@ export class ViewDataPageComponent {
 
     return [sessions, winnings];
   }
-
 }
+
