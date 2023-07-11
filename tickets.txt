@@ -45,7 +45,7 @@ Ticket 10 () :
     - host the front end repo onto the sever
 
 
-Ticket 11 () : Bug Fix Backend
+Ticket 11 (Kalpit) : Bug Fix Backend : DONE
     - user_data endpoint always gives same result (all data) regardless of date entered
 
 Ticket 12 () : 
