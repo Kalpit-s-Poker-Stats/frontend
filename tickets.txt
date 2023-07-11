@@ -22,15 +22,15 @@ Ticket 4 (Kalpit) : DONE
     - parse the data from user_data endpoint and attempt to display it onto a card (simple line graph winnings vs date)
 
 
-Ticket 5 () : Backend
+Ticket 5 (Kalpit) : Backend : DONE
     - need to make beg_date and end_date optional in endpoint
 
 
 Ticket 6 () : Frontend
-    - make beg_date and end_date optional in form and test
+    - create a drop down or radio with time frames in view data form
 
 
-Ticket 7 () : 
+Ticket 7 (Bittu) : 
     - hide the charts before the form is submitted on view-data-page
     - display the charts once the form is submitted and we get the response from user_data endpoint
 
