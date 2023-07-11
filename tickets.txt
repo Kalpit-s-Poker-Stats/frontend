@@ -12,12 +12,12 @@ Ticket 2 (Bittu): DONE
 
 
 
-Ticket 3 (Bittu): 
+Ticket 3 (Bittu): DONE
     - Create and style navigation bar
     - Connect the nav bar to the different component pages
 
 
-Ticket 4 () :
+Ticket 4 (Kalpit) : DONE
     - figure out how we need to parse the data
     - parse the data from user_data endpoint and attempt to display it onto a card (simple line graph winnings vs date)
 
@@ -43,3 +43,10 @@ Ticket 9 () :
 
 Ticket 10 () :
     - host the front end repo onto the sever
+
+
+Ticket 11 () : Bug Fix Backend
+    - user_data endpoint always gives same result (all data) regardless of date entered
+
+Ticket 12 () : 
+    - hide the form after submission on view data page
