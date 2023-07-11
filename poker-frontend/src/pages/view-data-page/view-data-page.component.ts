@@ -54,7 +54,7 @@ export class ViewDataPageComponent {
     const month = dateParts[1];
     const day = dateParts[2];
 
-    const formattedDate = `${month}%2F${day}%2F${year}`;
+    const formattedDate = `${year}-${month}-${day}`;
     return formattedDate;
   }
 
