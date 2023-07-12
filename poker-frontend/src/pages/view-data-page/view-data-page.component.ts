@@ -18,6 +18,7 @@ export class ViewDataPageComponent {
   userInput: any;
   viewData = new FormGroup({
     id: new FormControl(),
+    option: new FormControl(),
     beg_date: new FormControl(),
     end_date: new FormControl()
   });
@@ -27,19 +28,57 @@ export class ViewDataPageComponent {
   getInfo() {
     this.destroyChart();
     this.userInput = this.viewData.value;
-    const urlWithParams = 'session/user_data?id='
-                            + this.userInput.id
-                            + '&beg_date='
-                            + this.formatDateForApi(this.userInput.beg_date)
-                            + '&end_date='
-                            + this.formatDateForApi(this.userInput.end_date);
+    let urlWithParams = 'session/user_data?id='
+                    + this.userInput.id;
+    let begDate = '';
+    let endDate = '';
+    const today = new Date();
+
+    if (this.userInput.option === '2') {
+      const pastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+      urlWithParams +=
+                '&beg_date='
+                + this.formatDateObjectForApi(pastWeek)
+                + '&end_date='
+                + this.formatDateObjectForApi(today);
+    } else if (this.userInput.option === '3') {
+      const pastMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+      urlWithParams +=
+                '&beg_date='
+                + this.formatDateObjectForApi(pastMonth)
+                + '&end_date='
+                + this.formatDateObjectForApi(today);
+    } else if (this.userInput.option === '4') {
+      const pastYear = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+      urlWithParams +=
+                '&beg_date='
+                + this.formatDateObjectForApi(pastYear)
+                + '&end_date='
+                + this.formatDateObjectForApi(today);
+    } else if (this.userInput.option === '5') {
+        if (this.userInput.beg_date && this.userInput.end_date) {
+                urlWithParams +=
+                        '&beg_date='
+                        + this.formatDateForApi(this.userInput.beg_date)
+                        + '&end_date='
+                        + this.formatDateForApi(this.userInput.end_date);
+        }
+        else if (this.userInput.beg_date && !this.userInput.end_date ) {
+                begDate = this.formatDateForApi(this.userInput.beg_date);
+                console.log(begDate);
+                urlWithParams += '&beg_date=' + begDate;
+        } else if (!this.userInput.beg_date && this.userInput.end_date) {
+                endDate = this.formatDateForApi(this.userInput.end_date);
+                console.log(endDate);
+                urlWithParams += '&end_date=' + endDate;
+        }
+    }
     this.http.get(this.url + urlWithParams)
       .subscribe((res) => {
         this.response = res;
         this.retrievedData = this.getWinningsAndDate(this.response);
         this.createLineChart(this.retrievedData);
       });
-
   }
 
   destroyChart() {
@@ -53,11 +92,21 @@ export class ViewDataPageComponent {
     const year = dateParts[0];
     const month = dateParts[1];
     const day = dateParts[2];
-
     const formattedDate = `${year}-${month}-${day}`;
     return formattedDate;
   }
 
+  formatDateObjectForApi(date: string | Date): string {
+    if (typeof date === 'string') {
+      return date;
+    }
+
+    const year = date.getFullYear().toString();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
   getWinningsAndDate(apiResponse: any) {
     let winsAndDates = new Map();
     apiResponse.forEach((session: any) => {
@@ -121,4 +170,3 @@ export class ViewDataPageComponent {
     return [sessions, winnings];
   }
 }
-

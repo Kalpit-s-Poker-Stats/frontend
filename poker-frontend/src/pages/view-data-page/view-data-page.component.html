@@ -12,14 +12,23 @@
             </mat-form-field>
           </div>
           <div class="formGroup">
+            <mat-radio-group formControlName="option">
+              <mat-radio-button value="1">All Time</mat-radio-button>
+              <mat-radio-button value="2">Past Week</mat-radio-button>
+              <mat-radio-button value="3">Past Month</mat-radio-button>
+              <mat-radio-button value="4">Past Year</mat-radio-button>
+              <mat-radio-button value="5">Custom</mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <div *ngIf="viewData.value.option === '5'" class="formGroup">
             <label for="beg_date">Beginning Date: </label>
             <input id="beg_date" type="date" formControlName="beg_date">
           </div>
-          <div class="formGroup">
+          <div *ngIf="viewData.value.option === '5'" class="formGroup">
             <label for="end_date">End Date: </label>
             <input id="end_date" type="date" formControlName="end_date">
           </div>
-            <button type="submit" class='submitButton' [disabled]="!viewData.valid">Submit</button>
+          <button type="submit" class='submitButton' [disabled]="!viewData.valid">Submit</button>
         </mat-card-content>
       </mat-card>
     </form>
@@ -35,4 +44,6 @@
     </mat-card>
   </div>
 </div>
+
+
 
