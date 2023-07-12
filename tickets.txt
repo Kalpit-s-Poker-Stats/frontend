@@ -22,31 +22,31 @@ Ticket 4 (Kalpit) : DONE
     - parse the data from user_data endpoint and attempt to display it onto a card (simple line graph winnings vs date)
 
 
-Ticket 5 (Kalpit) : Backend : DONE
+Ticket 5 (Kalpit) : Backend DONE
     - need to make beg_date and end_date optional in endpoint
 
 
-Ticket 6 () : Frontend
-    - create a drop down or radio with time frames in view data form
+Ticket 6 (Bittu) : Frontend DONE
+    - make beg_date and end_date optional in form and test
 
-
-Ticket 7 (Bittu) : 
-    - hide the charts before the form is submitted on view-data-page
+Ticket 7 (Bittu) : Frontend DONE 
     - display the charts once the form is submitted and we get the response from user_data endpoint
+    - Add button functionality and filtering
 
+Ticket 8 () : Frontend
+    - hide the charts before the form is submitted on view-data-page
 
-Ticket 8 () :
+Ticket 9 () :
     - create a log in system where user enters id and password
 
-Ticket 9 () : 
+Ticket 10 () : 
     - update ReadMes for both repos
-
-Ticket 10 () :
-    - host the front end repo onto the sever
-
 
 Ticket 11 (Kalpit) : Bug Fix Backend : DONE
     - user_data endpoint always gives same result (all data) regardless of date entered
 
-Ticket 12 () : 
+Ticket 12 () :
+    - host the front end repo onto the sever
+
+Ticket 13 () : 
     - hide the form after submission on view data page
