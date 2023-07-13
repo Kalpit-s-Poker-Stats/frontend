@@ -14,7 +14,7 @@ export class ViewDataPageComponent {
   response: any;
   public chart: any;
   retrievedData: Map<string, number>;
-  shouldShowCard: boolean = true;
+  shouldShowCard: boolean = false;
   userInput: any;
   viewData = new FormGroup({
     id: new FormControl(),
@@ -79,6 +79,7 @@ export class ViewDataPageComponent {
         this.retrievedData = this.getWinningsAndDate(this.response);
         this.createLineChart(this.retrievedData);
       });
+    this.shouldShowCard = true;
   }
 
   destroyChart() {
