@@ -25,16 +25,15 @@ export class SessionEntryPageComponent {
     date: new FormControl(''),
   });
 
-  locations: string[] = [
-    'Home',
-    'Online',
-    'Casino',
+  locations = [
+    {label: 'Home', value: 'home'},
+    {label: 'Online', value: 'online'},
+    {label: 'Casino', value: 'casino' },
   ]
 
   constructor(private http: HttpClient) { }
 
   onSubmit() {
-    console.log();
     const sessionForm = this.sessionEntry.value;
     const entry = {
       id: sessionForm.id,
