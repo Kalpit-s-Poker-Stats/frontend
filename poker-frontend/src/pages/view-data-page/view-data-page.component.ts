@@ -22,6 +22,7 @@ export class ViewDataPageComponent {
     beg_date: new FormControl(),
     end_date: new FormControl()
   });
+  userStats: any;
 
   constructor(private http: HttpClient) { }
 
@@ -74,10 +75,11 @@ export class ViewDataPageComponent {
         }
     }
     this.http.get(this.url + urlWithParams)
-      .subscribe((res) => {
+      .subscribe((res: any) => {
         this.response = res;
         this.retrievedData = this.getWinningsAndDate(this.response);
         this.createLineChart(this.retrievedData);
+        this.userStats = res[res.length - 1];
       });
   }
 

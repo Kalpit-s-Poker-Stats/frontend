@@ -3,8 +3,8 @@
 
 .wrapper {
   background-color: #121212;
-  height: 60vh;
   width:100vw;
+  display: flex;
 }
 
   .container {
@@ -29,6 +29,15 @@
   }
   mat-card-title{
     color: #BB86FC;
+  }
+  mat-grid-list{
+    color: white;
+  }
+  mat-grid-tile-header{
+    justify-content: center;
+  }
+  mat-grid-tile-footer{
+    justify-content: center;
   }
   .formGroup {
     margin-top: 10%;
