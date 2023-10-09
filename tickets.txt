@@ -50,3 +50,7 @@ Ticket 12 () :
 
 Ticket 13 () : 
     - hide the form after submission on view data page
+
+Ticket 14 () : 
+    - modify how we are calling user_data endpoint in front end to allow no dates
+    - make the dates optional in FE form for view_data
