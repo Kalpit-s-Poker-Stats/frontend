@@ -29,8 +29,8 @@
               <div class="formGroup">
                 <mat-form-field>
                   <mat-label>Select an option</mat-label>
-                  <mat-select>
-                    <mat-option id="location" *ngFor="let option of locations" [value]="option">{{option}}</mat-option>
+                  <mat-select formControlName="location">
+                    <mat-option id="location" *ngFor="let option of locations" [value]="option.value">{{option.label}}</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
