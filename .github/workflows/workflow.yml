@@ -15,6 +15,8 @@ jobs:
     runs-on: self-hosted
     needs: [checkout]
     steps:
+      - name: Check Node.js version
+        run: node -v
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
