@@ -37,20 +37,20 @@
     <mat-grid-list cols="4" rowHeight="79:100">
       <mat-grid-tile>
         <mat-grid-tile-header>All Time Winnings</mat-grid-tile-header>
-        <h1>{{userStats.all_time_total}}</h1>
+        <h1>${{userStats.all_time_total}}</h1>
       </mat-grid-tile>
       <mat-grid-tile >
         <mat-grid-tile-header>Average All Time Win/Loss</mat-grid-tile-header>
-        <h1>{{userStats.average_all_time_win_or_loss}}</h1>
+        <h1>${{userStats.average_all_time_win_or_loss}}</h1>
       </mat-grid-tile>
       <mat-grid-tile>
         <mat-grid-tile-header>Largest Amount Won in 1 Session</mat-grid-tile-header>
-        <h1>{{userStats.biggest_win}}</h1>
+        <h1>${{userStats.biggest_win}}</h1>
         <mat-grid-tile-footer>{{userStats.date_of_biggest_win}}</mat-grid-tile-footer>
       </mat-grid-tile>
       <mat-grid-tile>
         <mat-grid-tile-header>Largest Amount Lost in 1 Session</mat-grid-tile-header>
-        <h1>{{userStats.biggest_loss}}</h1>
+        <h1>({{userStats.biggest_loss}})</h1>
         <mat-grid-tile-footer>{{userStats.date_of_biggest_loss}}</mat-grid-tile-footer>
       </mat-grid-tile>
       <mat-grid-tile>
