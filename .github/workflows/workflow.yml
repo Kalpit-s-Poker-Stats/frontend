@@ -15,18 +15,6 @@ jobs:
     runs-on: self-hosted
     needs: [checkout]
     steps:
-      # - name: Setup Node.js
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: '16.13'
-      # - name: Clear npm cache
-      #   run: npm cache clean --force
-      # - name: Check Node.js version
-      #   run: node -v
-      # - name: Check file permissions
-      #   run: ls -la .angular/cache
-      # - name: Clear npm cache
-      #   run: npm cache clean --force
       - name: Docker
         run: |
           sudo docker-compose down
