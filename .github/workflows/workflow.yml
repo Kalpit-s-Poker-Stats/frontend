@@ -15,6 +15,8 @@ jobs:
     runs-on: self-hosted
     needs: [checkout]
     steps:
+      - name: Clear npm cache
+        run: npm cache clean --force
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
