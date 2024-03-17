@@ -21,8 +21,8 @@ jobs:
       #     node-version: '16.13'
       # - name: Clear npm cache
       #   run: npm cache clean --force
-      - name: Check Node.js version
-        run: node -v
+      # - name: Check Node.js version
+      #   run: node -v
       - name: Docker
         run: |
           sudo docker-compose down
