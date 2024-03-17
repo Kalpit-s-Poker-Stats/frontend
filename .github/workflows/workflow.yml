@@ -15,10 +15,6 @@ jobs:
     runs-on: self-hosted
     needs: [checkout]
     steps:
-      - name: Install npm
-        run: sudo apt-get install npm
-      - name: Clear npm cache
-        run: npm cache clean --force
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
