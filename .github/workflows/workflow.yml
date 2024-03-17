@@ -23,10 +23,10 @@ jobs:
       #   run: npm cache clean --force
       # - name: Check Node.js version
       #   run: node -v
-      - name: Check file permissions
-        run: ls -la .angular/cache
-      - name: Clear npm cache
-        run: npm cache clean --force
+      # - name: Check file permissions
+      #   run: ls -la .angular/cache
+      # - name: Clear npm cache
+      #   run: npm cache clean --force
       - name: Docker
         run: |
           sudo docker-compose down

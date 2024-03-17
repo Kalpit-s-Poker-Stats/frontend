@@ -1,7 +1,7 @@
 # Stage 1: Build Angular application
 FROM node:16 AS build
 WORKDIR /app
-COPY package*.json /app/
+COPY package*.json ./
 RUN npm install
 COPY . .
 RUN npm run build -- --verbose
