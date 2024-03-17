@@ -1,5 +1,5 @@
 <div class="wrapper">
-  <div class = 'container'>
+  <!-- <div class = 'container'>
         <form [formGroup]="sessionEntry" (ngSubmit)="onSubmit()" class='form'>
           <mat-card>
             <mat-card-header>
@@ -47,5 +47,56 @@
           <div class="alert alert-success" role="alert" *ngIf="added">
               <h1 class="entry_added">{{added}}</h1>
           </div>
+    </div> -->
+
+
+
+    <div style="background-color: white;">
+      <h2>Upload CSV File</h2>
+      <form (submit)="onSubmit($event)">
+        <input type="file" (change)="onFileSelected($event)" accept=".csv">
+        <button [disabled]="!selectedFile">Submit</button>
+      </form>
+    
+      <div *ngIf="parsedData">
+        <h3>Parsed CSV Data</h3>
+        <table class="csv-table">
+          <thead>
+            <tr>
+              <th>Select</th>
+              <th *ngFor="let header of getColumnHeaders(parsedData)">{{ header }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of parsedData;">
+              <td><input type="checkbox" (change)="selectRow(row)"></td>
+              <ng-container *ngFor="let header of getColumnHeaders(parsedData); let colIndex = index">
+                <td contenteditable="true" (input)="updateCellValue($event)">{{ row[header] }}</td>
+              </ng-container>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td></td>
+              <td></td>
+              <td [ngStyle]="{ 'background-color': getTotalNet() == 0 ? 'green' : 'red' }">{{ getTotalNet() }}</td>
+            </tr>
+          </tfoot>
+        </table>
+        <button (click)="combineRows()">Combine Selected Rows</button>
+      </div>
+
+
+      <form [formGroup]="inputForm" (ngSubmit)="submitForm()">
+        <label for="nameInput">Names:</label>
+        <input type="text" id="nameInput" formControlName="names">
+        <label for="numberInput">Numbers:</label>
+        <input type="text" id="numberInput" formControlName="numbers">
+        <button type="submit">Submit</button>
+      </form>
+
+      <div [ngStyle]="{ 'background-color': isEqual == true ? 'green' : 'red' }">{{isEqual}}</div>
+
     </div>
+
 </div>

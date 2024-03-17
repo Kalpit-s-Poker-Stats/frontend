@@ -1,6 +1,6 @@
 @import "~bootstrap/dist/css/bootstrap.css";
   .wrapper {
-    background-color: #121212;
+    /* background-color: #121212; */
     height: 100vh;
     width:100vw;
   }
@@ -10,7 +10,7 @@
       padding: 5px;
   }
   mat-card {
-    background-color: #181818;
+    /* background-color: #181818; */
   }
   mat-form-field {
     width: 100%;
@@ -48,7 +48,7 @@
   transition: .2s;
   overflow: hidden;
   margin: 2%;
-  background-color: #121212;
+  /* background-color: #121212; */
 }
 
 button:hover{
@@ -65,4 +65,23 @@ button:hover{
   .entry_added {
     display: flex;
     justify-content: center;
+  }
+
+  .csv-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .csv-table th, .csv-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .csv-table th {
+    background-color: #f2f2f2;
+  }
+
+  .selected {
+    background-color: lightgray;
   }
