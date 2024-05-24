@@ -24,6 +24,8 @@
       "dom"
     ],
     "strictPropertyInitialization": false
+    // "noEmit": true,
+    // "allowImportingTsExtensions": true
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
