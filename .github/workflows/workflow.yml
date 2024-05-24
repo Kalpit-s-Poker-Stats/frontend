@@ -7,7 +7,7 @@ jobs:
   checkout:
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v4
       - name: Set Up ENV
         run: |
           echo "${{ secrets.SQL_URI }}" > .env
@@ -15,6 +15,9 @@ jobs:
     runs-on: self-hosted
     needs: [checkout]
     steps:
+      - name: Clear npm cache
+        run: npm cache clean --force
+        
       - name: Docker
         run: |
           sudo docker-compose down
