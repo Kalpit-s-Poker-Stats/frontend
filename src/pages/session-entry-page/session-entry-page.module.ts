@@ -9,6 +9,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatInputModule} from '@angular/material/input';
 import {MatSelectModule} from '@angular/material/select';
+import { SplitwiseService } from "src/services/splitwise.service";
 
 @NgModule({
   declarations: [
@@ -26,7 +27,7 @@ import {MatSelectModule} from '@angular/material/select';
     MatInputModule,
     MatSelectModule
   ],
-  providers: []
+  providers: [SplitwiseService]
 })
 
 

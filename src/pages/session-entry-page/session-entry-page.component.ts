@@ -2,6 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as Papa from 'papaparse';
+import { simplifyList } from '../../models/simplifyList';
+import { SplitwiseService } from 'src/services/splitwise.service';
+import { PlayerData } from 'src/models/PlayerData';
 
 
 
@@ -12,7 +15,8 @@ import * as Papa from 'papaparse';
 })
 export class SessionEntryPageComponent {
 
-  url = 'http://147.135.113.14:5000/v1/';
+  url = 'http://135.148.121.103:5000/v1/session/';
+  // url = 'http://127.0.0.1:8000/v1/session/';
   name: string | undefined;
   winnings: number | undefined;
   response: Object | undefined;
@@ -33,7 +37,7 @@ export class SessionEntryPageComponent {
     {label: 'Casino', value: 'casino' },
   ]
   selectedFile: File;
-  parsedData: any[];
+  parsedData: PlayerData[];
   selectedRows: any[] = [];
   inputForm: FormGroup;
 
@@ -42,9 +46,18 @@ export class SessionEntryPageComponent {
   diffName: string;
   diffNet: number;
   isEqual: boolean;
+  positive: simplifyList[] = [];
+  negative: simplifyList[] = [];
+
+  mockPNIDToSWID: { [key: string]: number} = {
+    "zRPXuS_2x-": 39742483,
+    "zm9UOpn-VN": 40742566,
+    "5CsKvXEd3O": 44365391
+  }
 
 
-  constructor(private http: HttpClient, private fb: FormBuilder) { }
+
+  constructor(private http: HttpClient, private fb: FormBuilder, private splitwiseService: SplitwiseService) { }
 
   ngOnInit(): void {
     this.inputForm = this.fb.group({
@@ -58,37 +71,49 @@ export class SessionEntryPageComponent {
     this.parseLedger();
   }
 
+  //TODO: need to move logic to it's own page: validate ledger (old) logic: Priority 0
   submitForm() {
-  const namesControl = this.inputForm.get('names');
-  const numbersControl = this.inputForm.get('numbers');
 
-  // Check if form controls are not null before accessing their values
-  if (namesControl && numbersControl && namesControl.value && numbersControl.value) {
-    const names = namesControl.value.split(' ');
-    const numbers = numbersControl.value.split(' ');
-    for(let i = 0; i < names.length; i++) {
-      if(numbers[i] == 0){
-        continue;
-      } else {
-        console.log("Adding name: ", names[i], " with net: ", numbers[i]*100);
-        this.inputDict.set(names[i], numbers[i]*100);
-      }
+    for(let i = 0; i < this.parsedData.length; i++) {
+      this.csvDict.set(this.parsedData[i].player_nickname,this.parsedData[i].net);
     }
+    
+    const namesControl = this.inputForm.get('names');
+    const numbersControl = this.inputForm.get('numbers');
+
+    // Check if form controls are not null before accessing their values
+    if (namesControl && numbersControl && namesControl.value && numbersControl.value) {
+      const names = namesControl.value.split(' ');
+      const numbers = numbersControl.value.split(' ');
+      for(let i = 0; i < names.length; i++) {
+        if(numbers[i] == 0){
+          continue;
+        } else {
+          console.log("Adding name: ", names[i], " with net: ", Math.round(numbers[i]*100));
+          this.inputDict.set(names[i], Math.round(numbers[i]*100));
+        }
+      }
 
 
-    this.isEqual = this.compare();
-    console.log("Name: ", this.diffName, " Amount: ", this.diffNet);
+      this.isEqual = this.compare();
+      console.log("Name: ", this.diffName, " Amount: ", this.diffNet);
 
-  } else {
-    console.error('Form controls are null or undefined');
+      this.inputDict.clear();
+      this.csvDict.clear();
+      this.diffName = "";
+      this.diffNet = 0;
+
+    } else {
+      console.error('Form controls are null or undefined');
+    }
   }
-  }
 
-
+  //TODO: need to move logic to it's own page: validate ledger (old) logic: Priority 0
   compare() {
 
     console.log("csvSize: ", this.csvDict);
     if(this.csvDict.size !== this.inputDict.size) {
+      console.log("returning bc csv dict size = ", this.csvDict.size, " and inputDict size is = ", this.inputDict.size);
       return false;
     }
 
@@ -119,13 +144,16 @@ export class SessionEntryPageComponent {
     });
 
     for(let i = 0; i < this.csvDict.size; i++) {
+      console.log("made it here");
       console.log("sortedCSV: ", csvArray[i][1]);
       if(csvArray[i][0].toLowerCase() != inputArray[i][0].toLowerCase()) {
         this.diffName = csvArray[i][0];
+        this.diffNet = csvArray[i][1];
         return false;
       }
       if(csvArray[i][1] != inputArray[i][1]) {
         console.log("inputArray: ", inputArray[i][1]);
+        this.diffName = csvArray[i][0];
         this.diffNet = csvArray[i][1];
         return false;
       }
@@ -134,34 +162,13 @@ export class SessionEntryPageComponent {
     return true;
   }
 
-  // onSubmit() {
-  //   const sessionForm = this.sessionEntry.value;
-  //   const entry = {
-  //     id: sessionForm.id,
-  //     winnings: sessionForm.winnings,
-  //     buy_in_amount: sessionForm.buy_in_amount,
-  //     buy_out_amount: sessionForm.buy_out_amount,
-  //     location: sessionForm.location,
-  //     date: sessionForm.date
-  //   }
-
-  //   this.http.post( this.url + 'session/entry', entry)
-
-  //   .subscribe((res: any) => {
-  //     this.added = res.detail;
-  //     this.sessionEntry.reset();
-  //     setTimeout(() => {
-  //       this.added = undefined;
-  //     }, 2500)
-  //   });
-  // }
 
   parseLedger() {
     Papa.parse(this.selectedFile, {
       complete: (result: any) => {
         this.parsedData = result.data;
         console.log('Parsed CSV data:', this.parsedData);
-        this.filterZeros();
+        this.filters();
         this.autoCombineRows();
         // You can further process the parsed data here
       },
@@ -169,31 +176,34 @@ export class SessionEntryPageComponent {
     });
   }
 
-  filterZeros() {
+  filters() {
     this.parsedData = this.parsedData.filter(row => row.net != 0);
     this.parsedData = this.parsedData.filter(row => row.player_nickname != "");
+    this.parsedData = this.parsedData.map(item => {
+      const updatedItem: PlayerData = { ...item };
+      
+      for (const key in updatedItem) {
+        if (typeof updatedItem[key as keyof PlayerData] === 'string' && (updatedItem[key as keyof PlayerData] as string).trim().length === 0) {
+          (updatedItem[key as keyof PlayerData] as string | null) = null;}
+      }
+
+      return updatedItem;
+    });
+
   }
 
-  getColumnHeaders(data: any[]): string[] {
-    if (!data || data.length === 0) {
-      return [];
-    }
-
-    const selectedColumns = ['player_nickname', 'player_id', 'net'];
-
-     // Find the first non-empty row
-    const headersRow = data.find(row => Object.values(row).some(value => value !== undefined && value !== null));
-
-    // Extract keys from the row (headers) and filter only selected columns
-    return headersRow ? Object.keys(headersRow).filter(key => selectedColumns.includes(key)) : [];
+  getColumnHeaders(data: PlayerData[]): (keyof PlayerData)[] {
+    return Object.keys(data[0]) as (keyof PlayerData)[]
   }
 
+  //TODO: let's keep this, but needs to be fixed: Priority 0
   getTotalNet(): number {
-    let total = 0;
+    let total: number = 0;
     if (this.parsedData && this.parsedData.length > 0) {
       this.parsedData.forEach(row => {
         // Assuming 'Net' is the key for the net value
-        total += parseFloat(row['Net'] || 0);
+        // TODO: it doesn't add up (need to figure out why; it is concatenating)
+        total += row.net;
       });
     }
     return total;
@@ -216,40 +226,94 @@ export class SessionEntryPageComponent {
     if (rowIndex !== -1 && this.parsedData[rowIndex]) {
       const colIndex = targetElement.cellIndex-1;
       console.log("header: ", this.getColumnHeaders(this.parsedData), "with value: ", value, " and column index as: ", colIndex);
-      const header = this.getColumnHeaders(this.parsedData)[colIndex];
-      this.parsedData[rowIndex][header] = value;
+      const headers = this.getColumnHeaders(this.parsedData);
+      const header = headers[colIndex] as keyof PlayerData;
+      // this.parsedData[rowIndex][header] = value;
+       // Ensure the type of value matches the type of the PlayerData property
+       if (header === 'player_nickname' || header === 'player_id') {
+        this.parsedData[rowIndex][header] = value;
+      } else if (header === 'session_start_at' || header === 'session_end_at') {
+        this.parsedData[rowIndex][header] = value ? new Date(value) : null;
+      } else if (header === 'buy_in' || header === 'stack' || header === 'net') {
+        this.parsedData[rowIndex][header] = parseFloat(value);
+      } else {
+        console.error(`Unhandled header: ${header}`);
+      }
     }
   }
-  
-  
-  
-  
 
   onSubmit(event: Event): void {
-    // const formData = new FormData();
-    // formData.append('csvFile', this.selectedFile);
-
-    // this.parseLedger();
     
     console.log("parsed Data: ", this.parsedData)
 
-    for(let i = 0; i < this.parsedData.length; i++) {
-      this.csvDict.set(this.parsedData[i].player_nickname,this.parsedData[i].net);
-    }
-    // console.log("formData: ", formData);
-
     event.preventDefault();
-    // this.http.post('/upload', formData).subscribe(
-    //   (response) => {
-    //     console.log('File uploaded successfully');
-    //     // Handle response as needed
-    //   },
-    //   (error) => {
-    //     console.error('Error uploading file:', error);
-    //   }
-    // );
+
+    console.log("json: ", JSON.stringify(this.parsedData));
+    this.http.post(this.url + "submit_ledger", this.parsedData).subscribe(
+      (response) => {
+        console.log("Success");
+      },
+      (error) => {
+        console.error("Error calling backend");
+      }
+    )
+
   }
 
+  //Used for Simplify Debts Algo
+  clear() {
+    this.positive = [];
+    this.negative = [];
+  }
+
+
+  //This is used for the simplify debts algorithm
+  formatDataForSimplify(arr: any) {
+    for(let i = 0; i < arr.length; i++) {
+      if(arr[i].net > 0) {
+        this.positive.push({player_name: arr[i].player_nickname, player_id: arr[i].player_id, player_net: arr[i].net});
+      } else if(arr[i].net < 0) {
+        this.negative.push({player_name: arr[i].player_nickname, player_id: arr[i].player_id, player_net: arr[i].net});
+      }
+    }
+
+    this.positive.sort((a, b) => b.player_net - a.player_net);
+    this.negative.sort((a, b) => b.player_net - a.player_net);
+  }
+
+  //Simplify Debts Algo
+  simplifyDebts() : simplifyList[] {
+    const simplifiedDebts: simplifyList[] = [];
+    let runningTotal: number = 0;
+    for (const debtor of this.negative) {
+      let remainingDebt = -1*(debtor.player_net);
+      runningTotal += -1*remainingDebt;
+      for (let i = 0; i < this.positive.length && remainingDebt > 0; i++) {
+          const creditor = this.positive[i];
+          const transferAmount = Math.min(creditor.player_net, remainingDebt);
+          runningTotal += transferAmount;
+          simplifiedDebts.push({
+              player_name: creditor.player_name,
+              player_id: debtor.player_id + "->" + creditor.player_id,
+              player_net: transferAmount
+          });
+          console.log(debtor.player_name + " pays " + creditor.player_name + " " + transferAmount);
+          remainingDebt -= transferAmount;
+          creditor.player_net -= transferAmount;
+          if (creditor.player_net === 0) {
+              this.positive.splice(i, 1);
+              i--;
+          }
+          
+      }
+  }
+
+  console.log("runningTotal: ", runningTotal);
+
+  return simplifiedDebts;
+  }
+
+  // TODO: may not need as there should always be one pn_id for each player
   selectRow(row: any) {
     const index = this.selectedRows.findIndex(selectedRow => selectedRow === row);
     if (index !== -1) {
@@ -260,30 +324,10 @@ export class SessionEntryPageComponent {
   }
 
 
+  // TODO: may not need as there should always be one pn_id for each player
   isSelected(row: any): boolean {
     return this.selectedRows.includes(row);
   }
-
-
-  // combineRows() {
-  //   console.log("select length: ", this.selectedRows.length);
-  //   if (this.selectedRows.length === 2) {
-  //     const netSum = this.selectedRows.reduce((acc, row) => acc + (parseFloat(row['net']) || 0), 0);
-  //     const combinedRow = { ...this.selectedRows[0] }; // Choose the first row for all other fields
-  //     combinedRow['net'] = netSum;
-  //     this.parsedData.push(combinedRow); // Add the combined row to the table
-  //     // Remove the selected rows from the table
-  //     this.parsedData = this.parsedData.filter(row => !this.selectedRows.includes(row));
-  //     this.selectedRows = []; // Clear selected rows
-  //   } else {
-  //     // Show error or message indicating that two rows must be selected
-  //     console.log("Please select two rows to combine.");
-  //   }
-
-  //   // this.parsedData.forEach(row => {
-  //   //   console.log(row);
-  //   // })
-  // }
 
   combineRows() {
     console.log("rows to combine: ", this.selectedRows);
@@ -292,11 +336,11 @@ export class SessionEntryPageComponent {
       console.log("before combining rows: ", this.parsedData);
         // Calculate net sum for all selected rows
         const netSum = this.selectedRows.reduce((acc, row) => acc + (parseFloat(row['net']) || 0), 0);
-        console.log("net sum: ", netSum);
+        console.log("net sum: ", netSum.toFixed(2));
         
         // Create combined row based on the first selected row
         const combinedRow = { ...this.selectedRows[0] };
-        combinedRow['net'] = netSum; // Set net field to the net sum
+        combinedRow['net'] = netSum.toFixed(2); // Set net field to the net sum
         
         // Push the combined row to the parsedData array
         this.parsedData.push(combinedRow);
@@ -316,40 +360,8 @@ export class SessionEntryPageComponent {
 }
 
   autoCombineRows() {
-
     while(this.duplicates(this.parsedData)){
-      // let temp = this.parsedData;
-      // let i = 0;
-      // this.selectedRows.push(temp[i]);
-
-      // for(let j = i+1; j < temp.length; j++){
-      //   console.log("parse i: ", i, " ", temp[i].player_id, " parse j: ", j, " ", temp[j].player_id);
-      //   if(temp[i].player_id === temp[j].player_id) {
-      //     console.log("made it here");
-      //     this.selectedRows.push(temp[j]);
-      //     // this.selectedRows.forEach(row => {
-      //     //   console.log("rows in selectedRows: ", row);
-      //     // })
-      //   }
-      // }
       this.combineRows();
-
-    // // let temp = 
-    // for(let i = 0; i < this.parsedData.length-1; i++) {
-    //   for(let j = i+1; j < this.parsedData.length; j++) {
-    //     console.log("parse i: ", i, " ", this.parsedData[i].player_id, " parse j: ", j, " ", this.parsedData[j].player_id);
-    //     if(this.parsedData[i].player_id === this.parsedData[j].player_id) {
-    //       console.log("made it here");
-    //       if(!this.selectedRows.includes(this.parsedData[i])) {
-    //         this.selectedRows.push(this.parsedData[i]);
-    //       }
-    //       this.selectedRows.push(this.parsedData[j]);
-    //       // this.selectedRows.forEach(row => {
-    //       //   console.log("rows in selectedRows: ", row);
-    //       // })
-    //     }
-    //   }
-      // this.combineRows();
     }
   }
 
@@ -369,6 +381,5 @@ export class SessionEntryPageComponent {
     }
     return false;
   }
-
 
 }
