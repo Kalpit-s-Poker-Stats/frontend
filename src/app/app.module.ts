@@ -16,8 +16,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { NgChartsModule } from 'ng2-charts';
-import { OAuthModule, OAuthService, UrlHelperService } from 'angular-oauth2-oidc';
-import { AuthService } from 'src/services/auth.service';
+// import { OAuthModule, OAuthService, UrlHelperService } from 'angular-oauth2-oidc';
+// import { AuthService } from 'src/services/auth.service';
 
 
 @NgModule({
@@ -40,7 +40,7 @@ import { AuthService } from 'src/services/auth.service';
     MatButtonModule,
     NgChartsModule,   
   ],
-  providers: [AuthService, OAuthService, UrlHelperService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
