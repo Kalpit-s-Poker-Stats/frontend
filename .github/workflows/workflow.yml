@@ -2,6 +2,7 @@ name: Deployment workflow
 on:
   push:
     branches: [depoyment-testing]
+  workflow_dispatch:
 
 jobs:
   checkout:
