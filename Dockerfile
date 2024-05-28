@@ -1,5 +1,5 @@
 # Stage 1: Build Angular application
-FROM node:16 AS build
+FROM node:18 AS build
 WORKDIR /app
 
 # Ensure npm and Angular cache are cleaned
