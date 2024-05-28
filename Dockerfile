@@ -1,10 +1,21 @@
 # Stage 1: Build Angular application
 FROM node:16 AS build
 WORKDIR /app
-COPY package*.json /app/
+
+# Ensure npm and Angular cache are cleaned
+RUN npm cache clean --force
+RUN npm install -g @angular/cli
+
+# Copy package.json and package-lock.json to install dependencies
+COPY package*.json ./
 RUN npm install
+
+# Copy the rest of the application files
 COPY . .
-RUN npm run build -- --verbose
+
+# Clear Angular cache and build the Angular application
+RUN ng cache clean
+RUN ng build --verbose
 
 # Stage 2: Serve Angular application with Nginx
 FROM nginx:alpine
