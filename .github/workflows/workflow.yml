@@ -17,8 +17,20 @@ jobs:
     runs-on: self-hosted
     needs: [checkout]
     steps:
-      - name: Docker
+      - name: Bring down Docker containers
         run: |
+          echo "Bringing down Docker containers"
           sudo docker-compose down
-          sudo docker-compose up --build -d
-          sudo docker system prune -a
+          echo "Docker containers brought down"
+
+      - name: Build and bring up Docker containers
+        run: |
+          echo "Building and bringing up Docker containers"
+          sudo docker-compose up --build -d || (echo "Docker compose failed" && exit 1)
+          echo "Docker containers are up"
+
+      - name: Prune Docker system
+        run: |
+          echo "Pruning Docker system"
+          sudo docker system prune -a -f
+          echo "Docker system pruned"

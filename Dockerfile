@@ -3,8 +3,8 @@ FROM node:18 AS build
 WORKDIR /app
 
 # Ensure npm and Angular cache are cleaned
+RUN npm install -g @angular/cli@latest
 RUN npm cache clean --force
-RUN npm install -g @angular/cli
 
 # Copy package.json and package-lock.json to install dependencies
 COPY package*.json ./
@@ -15,7 +15,7 @@ COPY . .
 
 # Clear Angular cache and build the Angular application
 RUN ng cache clean
-RUN ng build --verbose
+RUN ng build --verbose || (echo "Build failed" && exit 1)
 
 # Stage 2: Serve Angular application with Nginx
 FROM nginx:alpine
