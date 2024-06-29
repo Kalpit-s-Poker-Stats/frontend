@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Change ownership of the working directory
         run: sudo chown -R $USER:$USER /home/ubuntu/action-runner-fe/_work/frontend/frontend
-        
+
       - uses: actions/checkout@v4
       - name: Set Up ENV
         run: |
@@ -19,6 +19,11 @@ jobs:
     runs-on: self-hosted
     needs: [checkout]
     steps:
+      - name: Stop Existing Nginx
+        run: |
+          sudo systemctl stop nginx || true
+          sudo docker-compose down || true
+
       - name: Start Nginx
         run: |
           sudo docker-compose up -d web
