@@ -4,7 +4,7 @@ services:
     image: nginx:alpine
     container_name: web
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./default.conf:/etc/nginx/conf.d/default.conf:ro
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
       - ./dist:/usr/share/nginx/html
@@ -13,6 +13,7 @@ services:
       - "443:443"
     depends_on:
       - certbot
+      - angular-app
 
   certbot:
     image: certbot/certbot
@@ -24,6 +25,5 @@ services:
 
   angular-app:
     build: .
-    container_name: angular-app
     ports:
       - "4200:80"
