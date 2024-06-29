@@ -8,6 +8,9 @@ jobs:
   checkout:
     runs-on: self-hosted
     steps:
+      - name: Change ownership of the working directory
+        run: sudo chown -R $USER:$USER /home/ubuntu/action-runner-fe/_work/frontend/frontend
+        
       - uses: actions/checkout@v4
       - name: Set Up ENV
         run: |
