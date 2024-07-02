@@ -28,7 +28,6 @@ jobs:
       - name: Copy nginx Configuration
         run: |
           mkdir -p ./nginx
-          sudo rmdir ./nginx/nginx.conf
           cp -r /etc/nginx/nginx.conf ./nginx/
 
       - name: Start Nginx
