@@ -25,15 +25,15 @@ jobs:
           sudo systemctl stop nginx || true
           sudo docker-compose down || true
 
-      - name: Start Nginx
-        run: |
-          sudo docker-compose up -d web
-
       - name: Copy nginx Configuration
         run: |
           mkdir -p ./nginx
           sudo rmdir ./nginx/nginx.conf
           cp -r /etc/nginx/nginx.conf ./nginx/
+
+      - name: Start Nginx
+        run: |
+          sudo docker-compose up -d web
           
       - name: Obtain SSL certificates
         run: |
