@@ -10,7 +10,6 @@ RUN npm run build -- --verbose
 # Stage 2: Serve Angular application with Nginx
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
-COPY default.conf /etc/nginx/conf.d/default.conf
 COPY ./certbot /var/www/certbot
 EXPOSE 80
 EXPOSE 443
