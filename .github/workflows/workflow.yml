@@ -33,6 +33,10 @@ jobs:
       - name: Start Nginx
         run: |
           sudo docker-compose up -d web
+
+      - name: Copy Certificates
+        run: |
+          sudo ./copy-certs.sh
           
       - name: Obtain SSL certificates
         run: |
