@@ -11,19 +11,7 @@ jobs:
       - name: Change ownership of the working directory
         run: sudo chown -R $USER:$USER /home/ubuntu/action-runner-fe/_work/frontend/frontend
 
-      - name: Backup nginx Configuration
-        run: |
-          if [ -d "./nginx" ]; then
-            mv ./nginx ./nginx-backup
-          fi
-
       - uses: actions/checkout@v4
-
-      - name: Restore nginx Configuration
-        run: |
-          if [ -d "./nginx-backup" ]; then
-            mv ./nginx-backup ./nginx
-          fi
 
       - name: Set Up ENV
         run: |
@@ -40,6 +28,12 @@ jobs:
       - name: Start Nginx
         run: |
           sudo docker-compose up -d web
+
+      - name: Copy nginx Configuration
+        run: |
+          mkdir -p ./nginx
+          sudo rmdir ./nginx/nginx.conf
+          cp -r /etc/nginx/nginx.conf ./nginx/
           
       - name: Obtain SSL certificates
         run: |
