@@ -39,9 +39,9 @@ jobs:
           sudo cp -r /etc/letsencrypt/live/ certbot/conf/live
           sudo chmod -R 755 certbot/conf/live
           
-      - name: Obtain SSL certificates
-        run: |
-          sudo docker-compose run --rm certbot certonly --webroot --webroot-path=/var/www/certbot -d pokerparlor.club --email kalpitmody@gmail.com --agree-tos --no-eff-email
+      # - name: Obtain SSL certificates
+      #   run: |
+      #     sudo docker-compose run --rm certbot certonly --webroot --webroot-path=/var/www/certbot -d pokerparlor.club --email kalpitmody@gmail.com --agree-tos --no-eff-email
 
       - name: Restart services with SSL
         run: |
