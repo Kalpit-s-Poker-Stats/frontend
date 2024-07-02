@@ -36,7 +36,8 @@ jobs:
 
       - name: Copy Certificates
         run: |
-          sudo ./copy-certs.sh
+          sudo cp -r /etc/letsencrypt/live/ certbot/conf/live
+          sudo chmod -R 755 live/
           
       - name: Obtain SSL certificates
         run: |
