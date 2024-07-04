@@ -15,7 +15,8 @@ jobs:
 
       - name: Set Up ENV
         run: |
-          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> $GITHUB_ENV
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+          echo "API_URL=${{ secrets.API_URL }}" >> .env
   deploy:
     runs-on: self-hosted
     needs: [checkout]

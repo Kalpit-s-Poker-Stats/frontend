@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
-import { environment } from 'src/environments/environment.prod';
+import { environment } from 'src/environments/environment';
 
 export const sessionEntryPageGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
