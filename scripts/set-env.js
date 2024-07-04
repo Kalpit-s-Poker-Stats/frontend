@@ -7,8 +7,6 @@ require('dotenv').config({
 
 const targetPath = './src/environments/environment.ts';
 
-console.log("process: ", process.env);
-
 const envConfigFile = `
 export const environment = {
   production: true,
