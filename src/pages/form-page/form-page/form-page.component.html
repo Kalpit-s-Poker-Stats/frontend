@@ -1,0 +1,46 @@
+ <div class = 'container'>
+        <form [formGroup]="sessionEntry" (ngSubmit)="onSubmit()" class='form'>
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Sign Up Form</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="formGroup">
+                 <mat-form-field>
+                    <input id="name" formControlName='name' matInput placeholder="First & Last Name" [required]=true/>
+                 </mat-form-field>
+              </div>
+              <div class="formGroup">
+                <mat-form-field>
+                   <input id="pn_id" formControlName='pn_id' matInput placeholder="Poker Now ID" [required]=true/>
+                </mat-form-field>
+                <p>Please follow the steps in the discord to get this ID. It is critical that this id is correct. If you need help, reach out to Kalpit.</p>
+              </div>
+              <div class="formGroup">
+                <p>Please do not submit the form unitl you have joined the <a [href]="myLink" target="_blank">Splitwise Group</a></p>
+                <mat-form-field>
+                  <input id="splitwise_email" formControlName='splitwise_email' matInput placeholder="Splitwise Email" [required]=true/>
+                </mat-form-field>
+                <p>Please ensure there are no typos & you are using the email that is associated with your Splitwise Account</p>
+              </div>
+              <div class="formGroup">
+                <mat-form-field>
+                  <input id="discord_username" formControlName='discord_username' matInput placeholder="Discord Username" [required]=true>
+                </mat-form-field>
+                <p>Please enter your discord username not your display name.</p>
+              </div>
+              <div class="formGroup">
+                <mat-checkbox formControlName="acknowledgement" [required]=true>
+                  Please confirm that you have read all the rules by clicking this box.
+              </mat-checkbox>
+              </div>
+            </mat-card-content>
+            <mat-card-actions>
+              <button type="submit" class='submitButton' [disabled]="!sessionEntry.valid">Submit</button>
+            </mat-card-actions>
+          </mat-card>
+        </form>
+          <div class="alert alert-success" role="alert" *ngIf="added">
+              <h1 class="entry_added">{{added}}</h1>
+          </div>
+    </div>

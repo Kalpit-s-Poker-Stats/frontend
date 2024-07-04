@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { FormPageComponent } from 'src/pages/form-page/form-page/form-page.component';
 import { HomePageComponent } from 'src/pages/home-page/home-page.component';
 import { SessionEntryPageComponent } from 'src/pages/session-entry-page/session-entry-page.component';
 import { sessionEntryPageGuard } from 'src/pages/session-entry-page/session-entry-page.guard';
@@ -9,6 +10,7 @@ const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'session-entry', component: SessionEntryPageComponent, canActivate: [sessionEntryPageGuard]},
   { path: 'view-data', component: ViewDataPageComponent },
+  { path: 'sign-up', component: FormPageComponent }
 ];
 
 @NgModule({

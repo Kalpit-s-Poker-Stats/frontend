@@ -16,6 +16,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { NgChartsModule } from 'ng2-charts';
+import { FormPageModule } from 'src/pages/form-page/form-page/form-page.module';
 // import { OAuthModule, OAuthService, UrlHelperService } from 'angular-oauth2-oidc';
 // import { AuthService } from 'src/services/auth.service';
 
@@ -38,7 +39,8 @@ import { NgChartsModule } from 'ng2-charts';
     MatMenuModule,
     MatIconModule,
     MatButtonModule,
-    NgChartsModule,   
+    NgChartsModule,
+    FormPageModule   
   ],
   providers: [],
   bootstrap: [AppComponent]
