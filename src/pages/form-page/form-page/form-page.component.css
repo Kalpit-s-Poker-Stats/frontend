@@ -1,0 +1,87 @@
+@import "~bootstrap/dist/css/bootstrap.css";
+  .wrapper {
+    /* background-color: #121212; */
+    height: 100vh;
+    width:100vw;
+  }
+
+  .container {
+      max-width: 500px;
+      padding: 5px;
+  }
+  mat-card {
+    /* background-color: #181818; */
+  }
+  mat-form-field {
+    width: 100%;
+  }
+
+  .form {
+    padding-top: 7%;
+    color: rgb(141, 141, 141);
+    font-family: 'Raleway',sans-serif;
+    font-size: 20px;
+  }
+
+  .formGroup {
+    margin-top: 10%;
+    margin-bottom: 10%;
+    justify-content: center;
+  }
+  .submitButton {
+    width: 100%;
+  }
+  mat-card-title{
+    color: #BB86FC;
+  }
+
+ button{
+  position: relative;
+  display: inline-block;
+  padding: 25px 30px;
+  border:none;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: #888888;
+  font-size: 1.2rem;
+  font-weight: bold;
+  transition: .2s;
+  overflow: hidden;
+  margin: 2%;
+  /* background-color: #121212; */
+}
+
+button:hover{
+  background-color: #BB86FC;
+  color: #050801;
+  box-shadow: 0 0 5px #BB86FC,
+              0 0 25px #BB86FC,
+              0 0 50px #BB86FC,
+              0 0 200px #BB86FC;
+
+  -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
+}
+
+  .entry_added {
+    display: flex;
+    justify-content: center;
+  }
+
+  .csv-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .csv-table th, .csv-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  .csv-table th {
+    background-color: #f2f2f2;
+  }
+
+  .selected {
+    background-color: lightgray;
+  }
