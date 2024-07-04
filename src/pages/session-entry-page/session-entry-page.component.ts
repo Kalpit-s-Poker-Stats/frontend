@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import * as Papa from 'papaparse';
 import { simplifyList } from '../../models/simplifyList';
 import { SplitwiseService } from 'src/services/splitwise.service';
 import { PlayerData } from 'src/models/PlayerData';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -15,7 +16,7 @@ import { PlayerData } from 'src/models/PlayerData';
 })
 export class SessionEntryPageComponent {
 
-  url = 'http://135.148.121.103:5000/v1/session/';
+  url = environment.apiUrl;
   // url = 'http://127.0.0.1:8000/v1/session/';
   name: string | undefined;
   winnings: number | undefined;
@@ -170,7 +171,6 @@ export class SessionEntryPageComponent {
         console.log('Parsed CSV data:', this.parsedData);
         this.filters();
         this.autoCombineRows();
-        // You can further process the parsed data here
       },
       header: true // If the CSV has headers
     });
@@ -243,13 +243,18 @@ export class SessionEntryPageComponent {
   }
 
   onSubmit(event: Event): void {
+
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
+    });
     
     console.log("parsed Data: ", this.parsedData)
 
     event.preventDefault();
 
     console.log("json: ", JSON.stringify(this.parsedData));
-    this.http.post(this.url + "submit_ledger", this.parsedData).subscribe(
+    this.http.post(this.url + "submit_ledger", this.parsedData, { headers }).subscribe(
       (response) => {
         console.log("Success");
       },
@@ -334,13 +339,20 @@ export class SessionEntryPageComponent {
     console.log("select length: ", this.selectedRows.length);
     if (this.selectedRows.length >= 2) {
       console.log("before combining rows: ", this.parsedData);
-        // Calculate net sum for all selected rows
+      const combinedRow = { ...this.selectedRows[0] };
+      //   // Calculate net sum for all selected rows
         const netSum = this.selectedRows.reduce((acc, row) => acc + (parseFloat(row['net']) || 0), 0);
-        console.log("net sum: ", netSum.toFixed(2));
+        combinedRow['net'] = netSum.toFixed(2); // Set net field to the net sum
+
+        const buyInSum = this.selectedRows.reduce((acc, row) => acc + (parseFloat(row['buy_in']) || 0), 0);
+        combinedRow['buy_in'] = buyInSum.toFixed(0); // Set buy_in field to the sum
+
+        const buyOutSum = this.selectedRows.reduce((acc, row) => acc + (parseFloat(row['buy_out']) || 0), 0);
+        combinedRow['buy_out'] = buyOutSum.toFixed(0); // Set buy_out field to the sum
         
         // Create combined row based on the first selected row
-        const combinedRow = { ...this.selectedRows[0] };
-        combinedRow['net'] = netSum.toFixed(2); // Set net field to the net sum
+        // const combinedRow = { ...this.selectedRows[0] };
+        // combinedRow['net'] = netSum.toFixed(2); // Set net field to the net sum
         
         // Push the combined row to the parsedData array
         this.parsedData.push(combinedRow);

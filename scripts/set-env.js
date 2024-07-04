@@ -2,15 +2,18 @@ const { writeFileSync } = require('fs');
 const { argv } = require('yargs');
 
 require('dotenv').config({
-  path: argv.env
+  path: `.env`
 });
 
-const targetPath = './src/environments/environment.prod.ts';
+const targetPath = './src/environments/environment.ts';
+
+console.log("process: ", process.env);
 
 const envConfigFile = `
 export const environment = {
   production: true,
-  secretKey: '${process.env.SECRET_KEY}'
+  secretKey: '${process.env.SECRET_KEY}',
+  apiUrl: '${process.env.API_URL}'
 };
 `;
 
