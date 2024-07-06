@@ -254,7 +254,7 @@ export class SessionEntryPageComponent {
     event.preventDefault();
 
     console.log("json: ", JSON.stringify(this.parsedData));
-    this.http.post(this.url + "submit_ledger", this.parsedData, { headers }).subscribe(
+    this.http.post(this.url + "session/submit_ledger", this.parsedData, { headers }).subscribe(
       (response) => {
         console.log("Success");
       },
