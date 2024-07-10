@@ -30,3 +30,11 @@
   left: 0;
   bottom: 0;
 }
+
+
+@media (max-width: 768px) {
+  .mobile {
+    display: flex;
+    justify-content: center;
+  }
+}

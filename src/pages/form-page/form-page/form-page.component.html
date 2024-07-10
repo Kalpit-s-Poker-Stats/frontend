@@ -1,5 +1,5 @@
  <div class = 'container'>
-        <form [formGroup]="sessionEntry" (ngSubmit)="onSubmit()" class='form'>
+        <form [formGroup]="sessionEntry" (ngSubmit)="onSubmit()" class='form' *ngIf="responseCodeFromEndpoint!==200">
           <mat-card>
             <mat-card-header>
               <mat-card-title>Sign Up Form</mat-card-title>
@@ -14,6 +14,9 @@
                 <mat-form-field>
                    <input id="pn_id" formControlName='pn_id' matInput placeholder="Poker Now ID" [required]=true/>
                 </mat-form-field>
+                <div *ngIf="responseCodeFromEndpoint===409">
+                  <h1 class="error">This poker now id has already registered. Please make sure you are entering the correct poker now id. If you continue to have issues, reach out to Kalpit.</h1>
+                </div>
                 <p>Please follow the steps in the discord to get this ID. It is critical that this id is correct. If you need help, reach out to Kalpit.</p>
               </div>
               <div class="formGroup">
@@ -21,6 +24,9 @@
                 <mat-form-field>
                   <input id="splitwise_email" formControlName='splitwise_email' matInput placeholder="Splitwise Email" [required]=true/>
                 </mat-form-field>
+                <div *ngIf="responseCodeFromEndpoint===404">
+                <h1 class="error">That splitwise email is not associated with any user in the Group. Please join the group first.</h1>
+              </div>
                 <p>Please ensure there are no typos & you are using the email that is associated with your Splitwise Account</p>
               </div>
               <div class="formGroup">
@@ -30,7 +36,7 @@
                 <p>Please enter your discord username not your display name.</p>
               </div>
               <div class="formGroup">
-                <mat-checkbox formControlName="acknowledgement" [required]=true>
+                <mat-checkbox formControlName="acknowledgment" [required]=true>
                   Please confirm that you have read all the rules by clicking this box.
               </mat-checkbox>
               </div>
@@ -40,7 +46,13 @@
             </mat-card-actions>
           </mat-card>
         </form>
-          <div class="alert alert-success" role="alert" *ngIf="added">
-              <h1 class="entry_added">{{added}}</h1>
+          <div  *ngIf="responseCodeFromEndpoint===200">
+            <mat-card>
+              <mat-card-content class="success">
+                <h3>Thanks, {{sessionEntry.value.name}}!!</h3>
+                <p>{{response}}</p>
+                <button style="padding: 15px;" (click)="backToForm()">Back</button>
+              </mat-card-content>
+            </mat-card>
           </div>
     </div>

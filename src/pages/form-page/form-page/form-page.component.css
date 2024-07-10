@@ -62,9 +62,11 @@ button:hover{
   -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
 }
 
-  .entry_added {
+  .error {
     display: flex;
     justify-content: center;
+    font-size: small;
+    color: red;
   }
 
   .csv-table {
@@ -84,4 +86,8 @@ button:hover{
 
   .selected {
     background-color: lightgray;
+  }
+
+  .success {
+    color: white;
   }
