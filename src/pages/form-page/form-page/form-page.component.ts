@@ -15,7 +15,7 @@ export class FormPageComponent {
   winnings: number | undefined;
   response: string;
   added: string | undefined;
-  myLink = 'https://www.splitwise.com/join/GJWczrgAMYF';
+  myLink = 'https://www.splitwise.com/join/oxfNwJiC9F2+qewjz';
   url = environment.apiUrl;
 
   sessionEntry = new FormGroup({
