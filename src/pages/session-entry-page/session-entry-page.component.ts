@@ -264,14 +264,24 @@ export class SessionEntryPageComponent {
     });
     
     console.log("parsed Data: ", this.parsedData)
-    
+
     event.preventDefault();
 
+    const now = new Date();
+    const currentDate = now.toISOString().split('T')[0];
+
     console.log("json: ", JSON.stringify(this.parsedData));
-    this.http.post(this.url + "session/submit_ledger", this.parsedData, { headers }).subscribe(
-      (response) => {
+    this.http.post(this.url + "session/submit_ledger", this.parsedData, { headers, responseType: 'blob' }).subscribe(
+      (blob: Blob) => {
         this.wasLedgerSubmitted = 200;
-        this.response = response;
+        this.response = "Ledger Processed & Splitwise expenses created";
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `discord_update_info_${currentDate}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
       },
       (error) => {
         console.log("error: ", error);
