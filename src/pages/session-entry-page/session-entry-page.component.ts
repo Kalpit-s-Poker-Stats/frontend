@@ -17,7 +17,7 @@ import { environment } from 'src/environments/environment';
 export class SessionEntryPageComponent {
 
   url = environment.apiUrl;
-  // url = 'http://127.0.0.1:8000/v1/session/';
+  // url = 'http://127.0.0.1:8000/v1/';
   name: string | undefined;
   winnings: number | undefined;
   response: Object | undefined;
@@ -49,12 +49,6 @@ export class SessionEntryPageComponent {
   isEqual: boolean;
   positive: simplifyList[] = [];
   negative: simplifyList[] = [];
-
-  mockPNIDToSWID: { [key: string]: number} = {
-    "zRPXuS_2x-": 39742483,
-    "zm9UOpn-VN": 40742566,
-    "5CsKvXEd3O": 44365391
-  }
 
 
 
@@ -185,6 +179,21 @@ export class SessionEntryPageComponent {
       for (const key in updatedItem) {
         if (typeof updatedItem[key as keyof PlayerData] === 'string' && (updatedItem[key as keyof PlayerData] as string).trim().length === 0) {
           (updatedItem[key as keyof PlayerData] as string | null) = null;}
+
+        if (key === 'net' && typeof updatedItem[key as keyof PlayerData] === 'string') {
+          (updatedItem[key as keyof PlayerData] as number) = (updatedItem[key as keyof PlayerData] as number) / 100;
+        }
+
+        if(key === 'buy_in') {
+          (updatedItem[key as keyof PlayerData] as number) = (updatedItem[key as keyof PlayerData] as number) / 100;
+        }
+
+        if(key === 'buy_out') {
+          (updatedItem[key as keyof PlayerData] as number) = (updatedItem[key as keyof PlayerData] as number) / 100;
+        }
+        if(key === 'stack') {
+          (updatedItem[key as keyof PlayerData] as number) = (updatedItem[key as keyof PlayerData] as number) / 100;
+        }
       }
 
       return updatedItem;
