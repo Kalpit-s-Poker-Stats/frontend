@@ -49,6 +49,7 @@ export class SessionEntryPageComponent {
   isEqual: boolean;
   positive: simplifyList[] = [];
   negative: simplifyList[] = [];
+  wasLedgerSubmitted = -1;
 
 
 
@@ -64,6 +65,10 @@ export class SessionEntryPageComponent {
   onFileSelected(event: any): void {
     this.selectedFile = event.target.files[0];
     this.parseLedger();
+  }
+
+  goBack() {
+    this.wasLedgerSubmitted = -1;
   }
 
   //TODO: need to move logic to it's own page: validate ledger (old) logic: Priority 0
@@ -259,18 +264,20 @@ export class SessionEntryPageComponent {
     });
     
     console.log("parsed Data: ", this.parsedData)
-
+    
     event.preventDefault();
 
     console.log("json: ", JSON.stringify(this.parsedData));
     this.http.post(this.url + "session/submit_ledger", this.parsedData, { headers }).subscribe(
       (response) => {
-        console.log("Success");
+        this.wasLedgerSubmitted = 200;
+        this.response = response;
       },
       (error) => {
+        console.log("error: ", error);
         console.error("Error calling backend");
       }
-    )
+    );
 
   }
 

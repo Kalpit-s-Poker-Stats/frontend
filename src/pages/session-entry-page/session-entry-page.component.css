@@ -85,3 +85,10 @@ button:hover{
   .selected {
     background-color: lightgray;
   }
+
+  .response {
+    font-size: medium;
+    color: white;
+    display: flex;
+    justify-content: center;
+  }
