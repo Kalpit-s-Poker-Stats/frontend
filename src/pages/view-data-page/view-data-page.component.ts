@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Component, inject } from '@angular/core';
 import { Chart } from 'chart.js';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-view-data-page',
@@ -10,7 +11,7 @@ import { Chart } from 'chart.js';
 })
 export class ViewDataPageComponent {
 
-  url = 'http://147.135.113.14:5000/v1/';
+  url = environment.apiUrl;
   response: any;
   public chart: any;
   retrievedData: Map<string, number>;

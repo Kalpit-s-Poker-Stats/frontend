@@ -6,11 +6,12 @@ export const sessionEntryPageGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const sessionToken = localStorage.getItem('sessionToken');
 
-  if(sessionToken === environment.secretKey) {
-    return true;
-  } else {
-    router.navigate(["/"]);
-    return false;
-  }
+  // if(sessionToken === environment.secretKey) {
+  //   return true;
+  // } else {
+  //   router.navigate(["/"]);
+  //   return false;
+  // }
+  return true;
 
 };

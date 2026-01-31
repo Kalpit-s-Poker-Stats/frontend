@@ -17,8 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { NgChartsModule } from 'ng2-charts';
 import { FormPageModule } from 'src/pages/form-page/form-page/form-page.module';
-// import { OAuthModule, OAuthService, UrlHelperService } from 'angular-oauth2-oidc';
-// import { AuthService } from 'src/services/auth.service';
+import { DiscordCallbackModule } from 'src/components/discord-callback/discord-callback.module';
 
 
 @NgModule({
@@ -40,7 +39,8 @@ import { FormPageModule } from 'src/pages/form-page/form-page/form-page.module';
     MatIconModule,
     MatButtonModule,
     NgChartsModule,
-    FormPageModule   
+    FormPageModule,
+    DiscordCallbackModule
   ],
   providers: [],
   bootstrap: [AppComponent]
