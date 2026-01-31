@@ -1,0 +1,25 @@
+<div class="profile-container">
+  <img
+    *ngIf="profileImageUrl && !imageLoadFailed"
+    [src]="profileImageUrl"
+    alt="Profile Picture"
+    class="profile-picture"
+    (click)="toggleDropdown()"
+    (error)="onImageError()"
+    referrerpolicy="no-referrer"
+  >
+  <div
+    *ngIf="!profileImageUrl || imageLoadFailed"
+    class="profile-picture profile-initials"
+    (click)="toggleDropdown()"
+  >
+    {{ userInitials }}
+  </div>
+  <div class="dropdown-menu" *ngIf="showDropdown">
+    <div class="dropdown-header">{{ userName }}</div>
+    <div class="dropdown-divider"></div>
+    <button class="dropdown-item logout-btn" (click)="logout()">
+      Sign Out
+    </button>
+  </div>
+</div>

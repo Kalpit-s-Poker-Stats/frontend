@@ -7,6 +7,12 @@
       <!-- <a class="nav-item nav-link" href="/session-entry">Session Logger</a>
       <a class="nav-item nav-link" href="/view-data"> Data Entry</a> -->
     </div>
+    <div *ngIf="!isLoggedIn" class="ms-auto">  
+      <app-login></app-login>
+    </div>
+    <div *ngIf="isLoggedIn" class="ms-auto">  
+      <profile-icon></profile-icon>
+    </div>
   </div>
 </nav>
 </div>

@@ -11,7 +11,11 @@ const envConfigFile = `
 export const environment = {
   production: true,
   secretKey: '${process.env.SECRET_KEY}',
-  apiUrl: '${process.env.API_URL}'
+  apiUrl: '${process.env.API_URL}',
+  discord: {
+    clientId: '${process.env.DISCORD_CLIENT_ID}',
+    redirectUri: '${process.env.DISCORD_REDIRECT_URI}'
+  }
 };
 `;
 

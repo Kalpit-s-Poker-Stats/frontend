@@ -1,0 +1,66 @@
+.login-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.discord-signin-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px 24px;
+    background-color: #5865F2;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    min-width: 200px;
+}
+
+.discord-signin-btn:hover:not(:disabled) {
+    background-color: #4752C4;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.discord-signin-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.discord-icon {
+    flex-shrink: 0;
+}
+
+.btn-text {
+    white-space: nowrap;
+}
+
+.error-message {
+    color: #dc3545;
+    text-align: center;
+    margin-top: 16px;
+    padding: 8px 16px;
+    background-color: #fbe7e7;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

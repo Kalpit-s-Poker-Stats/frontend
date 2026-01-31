@@ -1,47 +1,78 @@
-// // auth.service.ts
-// //DOES NOT WORK CURRENTLY
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { User } from '../models/user.model';
+import { environment } from '../environments/environment';
+import { HttpClient } from '@angular/common/http';
 
-// import { Injectable } from '@angular/core';
-// import { OAuthService, AuthConfig, JwksValidationHandler } from 'angular-oauth2-oidc';
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthService {
+  public currentUserSubject = new BehaviorSubject<User | null>(null);
+  public currentUser$ = this.currentUserSubject.asObservable();
 
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class AuthService {
+  public _isAuthenticated$ = new BehaviorSubject<boolean>(false);
+  public isAuthenticated$: Observable<boolean> = this._isAuthenticated$.asObservable();
 
-//   constructor(private oauthService: OAuthService) {
-//     this.configureOAuth();
-//   }
+  private readonly DISCORD_AUTH_URL = 'https://discord.com/api/oauth2/authorize';
+  private readonly DISCORD_API_URL = 'https://discord.com/api/v10';
 
-//   private configureOAuth() {
-//     const authConfig: AuthConfig = {
-//       issuer: 'https://secure.splitwise.com',
-//       redirectUri: window.location.origin,
-//       clientId: 'rDs8Zy7ZEmw4UTyY9Tj5kcqjpeUGllMRNFyQETaB',
-//       responseType: 'token',
-//       showDebugInformation: true // Set to false in production
-//     };
+  constructor(private http: HttpClient) {
+    // Restore user from localStorage on init
+    const user = this.getUserFromLocalStorage();
+    if (user) {
+      this.currentUserSubject.next(user);
+      this._isAuthenticated$.next(true);
+    }
+  }
 
-//     this.oauthService.configure(authConfig);
-//     this.oauthService.setStorage(localStorage); // Use localStorage to persist tokens
-//     this.oauthService.setupAutomaticSilentRefresh(); // Automatically refresh tokens
-//     this.oauthService.tryLogin(); // Try to login using existing tokens
-//   }
+  private getUserFromLocalStorage(): User | null {
+    const userJson = localStorage.getItem('user');
+    return userJson ? JSON.parse(userJson) : null;
+  }
 
-//   login() {
-//     console.log("made it here 2");
-//     this.oauthService.initImplicitFlow(); // Initiate login flow
-//   }
+  signInWithDiscord(): void {
+    const params = new URLSearchParams({
+      client_id: environment.discord.clientId,
+      redirect_uri: environment.discord.redirectUri,
+      response_type: 'code',
+      scope: 'identify'
+    });
 
-//   logout() {
-//     this.oauthService.logOut(); // Log out and clear tokens
-//   }
+    window.location.href = `${this.DISCORD_AUTH_URL}?${params.toString()}`;
+  }
 
-//   isLoggedIn(): boolean {
-//     return this.oauthService.hasValidAccessToken();
-//   }
+  async handleDiscordCallback(code: string): Promise<boolean> {
+    try {
+      // Send code to backend to exchange for token and get user info
+      const response = await this.http.post<{user: User}>(`${environment.apiUrl}auth/discord`, { code }).toPromise();
 
-//   getAccessToken(): string {
-//     return this.oauthService.getAccessToken();
-//   }
-// }
+      if (response?.user) {
+        this.setCurrentUser(response.user);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error during Discord auth callback:', error);
+      return false;
+    }
+  }
+
+  setCurrentUser(user: User) {
+    this.currentUserSubject.next(user);
+    this._isAuthenticated$.next(true);
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+
+  async logout(): Promise<void> {
+    this.currentUserSubject.next(null);
+    this._isAuthenticated$.next(false);
+
+    // Clear all auth-related localStorage items
+    localStorage.removeItem('user');
+    localStorage.removeItem('sessionToken');
+
+    // Clear any remaining auth data
+    sessionStorage.clear();
+  }
+}
