@@ -4,7 +4,6 @@
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
       <a class="nav-item nav-link" href="">Home</a>
-      <a *ngIf="isLoggedIn" class="nav-item nav-link" href="/view-data">View Your Data</a>
     </div>
     <div *ngIf="!isLoggedIn" class="ms-auto">  
       <app-login></app-login>
