@@ -1,8 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
 import { SplitwiseService } from 'src/services/splitwise.service';
+import { AuthService } from 'src/services/auth.service';
 import { userCreate } from 'src/models/userCreate';
 
 @Component({
@@ -10,7 +12,7 @@ import { userCreate } from 'src/models/userCreate';
   templateUrl: './form-page.component.html',
   styleUrls: ['./form-page.component.css']
 })
-export class FormPageComponent {
+export class FormPageComponent implements OnInit {
   name: string | undefined;
   winnings: number | undefined;
   response: string;
@@ -18,11 +20,17 @@ export class FormPageComponent {
   myLink = 'https://www.splitwise.com/join/oxfNwJiC9F2+qewjz';
   url = environment.apiUrl;
 
+  // Discord sign-up flow
+  isFromDiscord = false;
+  discordUsername: string | null = null;
+  discordId: string | null = null;
+
   sessionEntry = new FormGroup({
     name: new FormControl(),
     pn_id: new FormControl(),
     splitwise_email: new FormControl(),
     discord_username: new FormControl(),
+    discord_id: new FormControl(),
     acknowledgment: new FormControl(),
   });
 
@@ -32,12 +40,36 @@ export class FormPageComponent {
 
   responseCodeFromEndpoint: number = -1;
 
-  constructor(private http: HttpClient, private fb: FormBuilder, private splitwiseService: SplitwiseService) { }
+  constructor(
+    private http: HttpClient,
+    private fb: FormBuilder,
+    private splitwiseService: SplitwiseService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private authService: AuthService
+  ) { }
 
   ngOnInit(): void {
     this.inputForm = this.fb.group({
       names: ['', Validators.required],
       numbers: ['', Validators.required]
+    });
+
+    // Check if coming from Discord login
+    this.route.queryParams.subscribe(params => {
+      if (params['from_discord'] === 'true') {
+        this.isFromDiscord = true;
+        this.discordUsername = params['discord_username'] || null;
+        this.discordId = params['discord_id'] || null;
+
+        // Auto-populate discord fields
+        if (this.discordUsername) {
+          this.sessionEntry.patchValue({
+            discord_username: this.discordUsername,
+            discord_id: this.discordId
+          });
+        }
+      }
     });
   }
 
@@ -49,14 +81,21 @@ export class FormPageComponent {
 
     console.log(this.sessionEntry.value);
 
-    this.http.post(this.url + "profile/create_user_profile", this.sessionEntry.value, { headers }).subscribe(
+    this.http.post<any>(this.url + "profile/create_user_profile", this.sessionEntry.value, { headers }).subscribe(
       (response) => {
         this.responseCodeFromEndpoint = 200;
-        this.response = response.toString();
+        this.response = response?.message ?? '';
+
+        // If coming from Discord, log the user in and redirect to home
+        if (this.isFromDiscord && response?.user) {
+          this.authService.setCurrentUser(response.user);
+          setTimeout(() => {
+            this.router.navigate(['/']);
+          }, 2000);
+        }
       },
       (error) => {
         this.responseCodeFromEndpoint = error.status;
-        console.log(this.responseCodeFromEndpoint);
       }
     )
   }

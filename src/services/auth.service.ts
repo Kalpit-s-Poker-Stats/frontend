@@ -2,7 +2,16 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../models/user.model';
 import { environment } from '../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+
+export interface DiscordAuthResult {
+  success: boolean;
+  user?: User;
+  isNewUser?: boolean;
+  discordUsername?: string;
+  discordId?: string;
+  error?: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -42,19 +51,34 @@ export class AuthService {
     window.location.href = `${this.DISCORD_AUTH_URL}?${params.toString()}`;
   }
 
-  async handleDiscordCallback(code: string): Promise<boolean> {
+  async handleDiscordCallback(code: string): Promise<DiscordAuthResult> {
     try {
       // Send code to backend to exchange for token and get user info
       const response = await this.http.post<{user: User}>(`${environment.apiUrl}auth/discord`, { code }).toPromise();
 
       if (response?.user) {
         this.setCurrentUser(response.user);
-        return true;
+        return { success: true, user: response.user };
       }
-      return false;
+      return { success: false, error: 'No user data received' };
     } catch (error) {
       console.error('Error during Discord auth callback:', error);
-      return false;
+
+      // Check if this is a "user not found" error (404)
+      if (error instanceof HttpErrorResponse && error.status === 404) {
+        const detail = error.error?.detail;
+        if (detail?.error === 'user_not_found') {
+          return {
+            success: false,
+            isNewUser: true,
+            discordUsername: detail.discord_username,
+            discordId: detail.discord_id,
+            error: detail.message
+          };
+        }
+      }
+
+      return { success: false, error: 'Authentication failed' };
     }
   }
 

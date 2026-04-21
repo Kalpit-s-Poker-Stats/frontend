@@ -1,11 +1,10 @@
 <div class="mobile">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="">Poker Parlor Sign Up</a>
+  <a class="navbar-brand" href="">Poker Parlor</a>
   <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
     <div class="navbar-nav">
       <a class="nav-item nav-link" href="">Home</a>
-      <!-- <a class="nav-item nav-link" href="/session-entry">Session Logger</a>
-      <a class="nav-item nav-link" href="/view-data"> Data Entry</a> -->
+      <a *ngIf="isLoggedIn" class="nav-item nav-link" href="/view-data">View Your Data</a>
     </div>
     <div *ngIf="!isLoggedIn" class="ms-auto">  
       <app-login></app-login>
