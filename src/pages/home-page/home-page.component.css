@@ -1,81 +1,260 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Raleway', sans-serif;
+  text-decoration: none;
+}
 
-  *{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Raleway',sans-serif;
-    text-decoration: none;
-    background-color: #121212;
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: #121212;
+  padding: 2rem;
+}
+
+/* Guest (Not Logged In) Styles */
+.guest-container {
+  max-width: 800px;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.club-header {
+  margin-bottom: 3rem;
+}
+
+.club-title {
+  font-size: 3.5rem;
+  color: #BB86FC;
+  text-transform: uppercase;
+  letter-spacing: 8px;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 20px rgba(187, 134, 252, 0.3);
+}
+
+.club-tagline {
+  font-size: 1.2rem;
+  color: #03dac5;
+  font-style: italic;
+  letter-spacing: 2px;
+}
+
+.club-info {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  padding: 2.5rem;
+  border: 1px solid #333;
+}
+
+.info-section {
+  margin-bottom: 2rem;
+}
+
+.info-section:last-of-type {
+  margin-bottom: 2rem;
+}
+
+.info-section h2 {
+  color: #BB86FC;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+}
+
+.info-section p {
+  color: #e0e0e0;
+  line-height: 1.8;
+  font-size: 1.1rem;
+}
+
+.feature-list {
+  list-style: none;
+  text-align: left;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.feature-list li {
+  color: #e0e0e0;
+  padding: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+  font-size: 1.05rem;
+}
+
+.feature-list li::before {
+  content: '♦';
+  color: #03dac5;
+  position: absolute;
+  left: 0;
+}
+
+.cta-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #333;
+}
+
+.cta-text {
+  color: #fff;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.login-prompt {
+  color: #BB86FC;
+  font-size: 1.1rem;
+}
+
+/* Member (Logged In) Styles */
+.member-container {
+  max-width: 600px;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.welcome-section {
+  margin-bottom: 2.5rem;
+}
+
+.welcome-title {
+  font-size: 2.5rem;
+  color: #BB86FC;
+  margin-bottom: 0.5rem;
+  letter-spacing: 2px;
+}
+
+.welcome-subtitle {
+  font-size: 1.2rem;
+  color: #03dac5;
+  font-style: italic;
+}
+
+.poker-fact-card {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2.5rem;
+  border: 1px solid #333;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.poker-fact-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(187, 134, 252, 0.2);
+}
+
+.fact-icon {
+  font-size: 3rem;
+  color: #BB86FC;
+  margin-bottom: 1rem;
+}
+
+.poker-fact-card h3 {
+  color: #03dac5;
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  letter-spacing: 1px;
+}
+
+.fact-text {
+  color: #e0e0e0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.action-section {
+  margin-top: 1rem;
+}
+
+.action-prompt {
+  color: #e0e0e0;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.play-button {
+  position: relative;
+  display: inline-block;
+  padding: 20px 40px;
+  border: none;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: #BB86FC;
+  font-size: 1.3rem;
+  font-weight: bold;
+  transition: 0.5s;
+  overflow: hidden;
+  background-color: #181818;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.play-button:hover {
+  background-color: #BB86FC;
+  color: #050801;
+  box-shadow: 0 0 5px #BB86FC,
+              0 0 25px #BB86FC,
+              0 0 50px #BB86FC,
+              0 0 200px #BB86FC;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-
-  .wrapper{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width:100vw;
-    background-color: #121212;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
+}
 
-  mat-card{
-    width: 20vw;
-    background-color: #181818;
-  }
-
-  button{
-    position: relative;
-    display: inline-block;
-    padding: 25px 30px;
-    border:none;
-    text-transform: uppercase;
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .club-title {
+    font-size: 2rem;
     letter-spacing: 4px;
-    color: #BB86FC;
+  }
+
+  .club-tagline {
+    font-size: 1rem;
+  }
+
+  .club-info {
+    padding: 1.5rem;
+  }
+
+  .info-section h2 {
     font-size: 1.2rem;
-    font-weight: bold;
-    transition: .5s;
-    overflow: hidden;
-    background-color: #181818;
   }
 
-  button:hover{
-    background-color: #BB86FC;
-    color: #050801;
-    box-shadow: 0 0 5px #BB86FC,
-                0 0 25px #BB86FC,
-                0 0 50px #BB86FC,
-                0 0 200px #BB86FC;
-
-    -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
-  }
-  .dataNav {
-    color:#03dac5;
-  }
-  .dataNav:hover{
-    background-color: #03dac5;
-    color: #050801;
-    box-shadow: 0 0 5px #03dac5,
-                0 0 25px #03dac5,
-                0 0 50px #03dac5,
-                0 0 200px #03dac5;
-
-    -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
+  .info-section p {
+    font-size: 1rem;
   }
 
-  .signUpButton {
-    font-size: 2rem; 
-    padding: 1rem 2rem;
-    width: 33%; 
-    height: 20%; 
-    display: inline-block; 
-    box-sizing: border-box;
+  .feature-list li {
+    font-size: 0.95rem;
   }
 
-  @media (max-width: 768px) {
-    .signUpButton {
-      font-size: 1.2rem;
-      padding: 0.8rem 1.6rem;
-      height: 15%;
-      width: 50%;
-    }
+  .welcome-title {
+    font-size: 1.8rem;
   }
 
+  .welcome-subtitle {
+    font-size: 1rem;
+  }
+
+  .poker-fact-card {
+    padding: 1.5rem;
+  }
+
+  .play-button {
+    padding: 15px 30px;
+    font-size: 1rem;
+  }
+}

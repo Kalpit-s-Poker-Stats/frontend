@@ -2,9 +2,13 @@
         <form [formGroup]="sessionEntry" (ngSubmit)="onSubmit()" class='form' *ngIf="responseCodeFromEndpoint!==200">
           <mat-card>
             <mat-card-header>
-              <mat-card-title>Sign Up Form</mat-card-title>
+              <mat-card-title *ngIf="!isFromDiscord">Sign Up Form</mat-card-title>
+              <mat-card-title *ngIf="isFromDiscord">Complete Your Profile</mat-card-title>
             </mat-card-header>
             <mat-card-content>
+              <div *ngIf="isFromDiscord" class="discord-notice">
+                <p>Welcome! We just need a bit more information to set up your account.</p>
+              </div>
               <div class="formGroup">
                  <mat-form-field>
                     <input id="name" formControlName='name' matInput placeholder="First & Last Name" [required]=true/>
@@ -31,9 +35,10 @@
               </div>
               <div class="formGroup">
                 <mat-form-field>
-                  <input id="discord_username" formControlName='discord_username' matInput placeholder="Discord Username" [required]=true>
+                  <input id="discord_username" formControlName='discord_username' matInput placeholder="Discord Username" [required]=true [readonly]="isFromDiscord">
                 </mat-form-field>
-                <p>Please enter your discord username not your display name.</p>
+                <p *ngIf="!isFromDiscord">Please enter your discord username not your display name.</p>
+                <p *ngIf="isFromDiscord" class="auto-filled">Auto-filled from your Discord account.</p>
               </div>
               <div class="formGroup">
                 <mat-checkbox formControlName="acknowledgment" [required]=true>
@@ -51,7 +56,8 @@
               <mat-card-content class="success">
                 <h3>Thanks, {{sessionEntry.value.name}}!!</h3>
                 <p>{{response}}</p>
-                <button style="padding: 15px;" (click)="backToForm()">Back</button>
+                <p *ngIf="isFromDiscord" class="redirect-notice">Redirecting you to the home page...</p>
+                <button *ngIf="!isFromDiscord" style="padding: 15px;" (click)="backToForm()">Back</button>
               </mat-card-content>
             </mat-card>
           </div>

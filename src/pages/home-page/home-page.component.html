@@ -1,11 +1,56 @@
 <div class="wrapper">
-  <mat-card style="display: contents;">
-    <button class="signUpButton" (click)="navigateUser('/sign-up')">
-      Sign Up
-    </button>
+  <!-- Not Logged In State -->
+  <div *ngIf="!isLoggedIn" class="guest-container">
+    <div class="club-header">
+      <h1 class="club-title">Poker Parlor</h1>
+      <p class="club-tagline">Where Passion Meets the Cards</p>
+    </div>
 
-    <!-- <button class="dataNav" (click)="navigateUser('/view-data')">
-      View Data
-    </button> -->
-  </mat-card>
+    <div class="club-info">
+      <div class="info-section">
+        <h2>A Community for Poker Enthusiasts</h2>
+        <p>
+          Welcome to Poker Parlor, an exclusive club for those who live and breathe poker.
+          Whether you're a seasoned pro or just discovering your love for the game,
+          this is your home.
+        </p>
+      </div>
+
+      <div class="info-section">
+        <h2>What We Offer</h2>
+        <ul class="feature-list">
+          <li>Competitive cash games and tournaments</li>
+          <li>Track your stats and improve your game</li>
+          <li>Connect with fellow poker enthusiasts</li>
+          <li>A welcoming community that shares your passion</li>
+        </ul>
+      </div>
+
+      <div class="cta-section">
+        <p class="cta-text">Ready to join the table?</p>
+        <p class="login-prompt">Log in with Discord to join the club and start playing.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logged In State -->
+  <div *ngIf="isLoggedIn" class="member-container">
+    <div class="welcome-section">
+      <h1 class="welcome-title">Welcome back, {{ getFirstName() }}!</h1>
+      <p class="welcome-subtitle">The cards are waiting for you.</p>
+    </div>
+
+    <div class="poker-fact-card">
+      <div class="fact-icon">♠</div>
+      <h3>Did You Know?</h3>
+      <p class="fact-text">{{ pokerFact }}</p>
+    </div>
+
+    <div class="action-section">
+      <p class="action-prompt">Ready to test your skills?</p>
+      <button class="play-button" (click)="navigateUser('/view-data')">
+        View Your Data
+      </button>
+    </div>
+  </div>
 </div>

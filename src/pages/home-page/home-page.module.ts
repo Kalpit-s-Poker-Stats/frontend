@@ -4,7 +4,8 @@ import { HttpClientModule } from "@angular/common/http";
 import { NgModule } from "@angular/core";
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from "@angular/platform-browser";
-import {MatCardModule} from '@angular/material/card';
+import { CommonModule } from "@angular/common";
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import {MatCardModule} from '@angular/material/card';
     HttpClientModule,
     ReactiveFormsModule,
     BrowserModule,
+    CommonModule,
     MatCardModule
   ],
   providers: []

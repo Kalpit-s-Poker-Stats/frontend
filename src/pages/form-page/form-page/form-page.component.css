@@ -91,3 +91,34 @@ button:hover{
   .success {
     color: white;
   }
+
+  .discord-notice {
+    background-color: rgba(88, 101, 242, 0.1);
+    border: 1px solid #5865F2;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+
+  .discord-notice p {
+    color: #5865F2;
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  .auto-filled {
+    color: #03dac5;
+    font-style: italic;
+    font-size: 0.9rem;
+  }
+
+  .redirect-notice {
+    color: #03dac5;
+    font-style: italic;
+    margin-top: 15px;
+  }
+
+  input[readonly] {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #888;
+  }

@@ -38,11 +38,21 @@ export class DiscordCallbackComponent implements OnInit {
     }
 
     try {
-      const success = await this.authService.handleDiscordCallback(code);
-      if (success) {
+      const result = await this.authService.handleDiscordCallback(code);
+
+      if (result.success) {
         this.router.navigate(['/']);
+      } else if (result.isNewUser) {
+        // New user - redirect to sign-up form with Discord info
+        this.router.navigate(['/sign-up'], {
+          queryParams: {
+            discord_username: result.discordUsername,
+            discord_id: result.discordId,
+            from_discord: 'true'
+          }
+        });
       } else {
-        this.error = 'Failed to complete sign-in. Please try again.';
+        this.error = result.error || 'Failed to complete sign-in. Please try again.';
         this.isLoading = false;
       }
     } catch (error) {
