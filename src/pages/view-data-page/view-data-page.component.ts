@@ -1,175 +1,217 @@
-import { HttpClient } from '@angular/common/http';
-import { FormControl, FormGroup } from '@angular/forms';
-import { Component, inject } from '@angular/core';
-import { Chart } from 'chart.js';
-import { environment } from 'src/environments/environment';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/services/auth.service';
+import { StatsService } from 'src/services/stats.service';
+import { SessionRow, AggregateStats, StatsResponse } from 'src/models/stats.model';
+
+type DateFilter = 'all' | 'week' | 'month' | 'year' | 'custom';
+
+const EMPTY_STATS: AggregateStats = {
+  total_pnl: 0, average_pnl: 0, biggest_win: 0, date_of_biggest_win: null,
+  biggest_loss: 0, date_of_biggest_loss: null, win_rate: 0,
+  sessions_won: 0, sessions_lost: 0, total_sessions: 0, total_buy_in: 0, roi: 0
+};
 
 @Component({
   selector: 'app-view-data-page',
   templateUrl: './view-data-page.component.html',
   styleUrls: ['./view-data-page.component.css']
 })
-export class ViewDataPageComponent {
+export class ViewDataPageComponent implements OnInit {
+  sessions: SessionRow[] = [];
+  stats: AggregateStats = { ...EMPTY_STATS };
+  allTimeStats: AggregateStats = { ...EMPTY_STATS };
 
-  url = environment.apiUrl;
-  response: any;
-  public chart: any;
-  retrievedData: Map<string, number>;
-  shouldShowCard: boolean = true;
-  userInput: any;
-  viewData = new FormGroup({
-    id: new FormControl(),
-    option: new FormControl(),
-    beg_date: new FormControl(),
-    end_date: new FormControl()
-  });
-  userStats: any;
+  selectedFilter: DateFilter = 'all';
+  customBegDate: string = '';
+  customEndDate: string = '';
+  pinStatsToAllTime = false;
+  isLoading = true;
+  hasNoData = false;
 
-  constructor(private http: HttpClient) { }
+  lineChartOptions: any = {};
+  cumulativeChartOptions: any = {};
+  donutChartOptions: any = {};
+  barChartOptions: any = {};
 
-  getInfo() {
-    this.destroyChart();
-    this.userInput = this.viewData.value;
-    let urlWithParams = 'session/user_data?id='
-                    + this.userInput.id;
-    let begDate = '';
-    let endDate = '';
-    const today = new Date();
+  private pnId = '';
 
-    if (this.userInput.option === '2') {
-      const pastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
-      urlWithParams +=
-                '&beg_date='
-                + this.formatDateObjectForApi(pastWeek)
-                + '&end_date='
-                + this.formatDateObjectForApi(today);
-    } else if (this.userInput.option === '3') {
-      const pastMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
-      urlWithParams +=
-                '&beg_date='
-                + this.formatDateObjectForApi(pastMonth)
-                + '&end_date='
-                + this.formatDateObjectForApi(today);
-    } else if (this.userInput.option === '4') {
-      const pastYear = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
-      urlWithParams +=
-                '&beg_date='
-                + this.formatDateObjectForApi(pastYear)
-                + '&end_date='
-                + this.formatDateObjectForApi(today);
-    } else if (this.userInput.option === '5') {
-        if (this.userInput.beg_date && this.userInput.end_date) {
-                urlWithParams +=
-                        '&beg_date='
-                        + this.formatDateForApi(this.userInput.beg_date)
-                        + '&end_date='
-                        + this.formatDateForApi(this.userInput.end_date);
-        }
-        else if (this.userInput.beg_date && !this.userInput.end_date ) {
-                begDate = this.formatDateForApi(this.userInput.beg_date);
-                console.log(begDate);
-                urlWithParams += '&beg_date=' + begDate;
-        } else if (!this.userInput.beg_date && this.userInput.end_date) {
-                endDate = this.formatDateForApi(this.userInput.end_date);
-                console.log(endDate);
-                urlWithParams += '&end_date=' + endDate;
-        }
+  constructor(
+    private authService: AuthService,
+    private statsService: StatsService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    const user = this.authService.currentUserSubject.value;
+    if (!user?.pn_id) {
+      this.router.navigate(['/']);
+      return;
     }
-    this.http.get(this.url + urlWithParams)
-      .subscribe((res: any) => {
-        this.response = res;
-        this.retrievedData = this.getWinningsAndDate(this.response);
-        this.createLineChart(this.retrievedData);
-        this.userStats = res[res.length - 1];
-      });
+    this.pnId = user.pn_id;
+    this.loadStats();
   }
 
-  destroyChart() {
-    if (this.chart) {
-      this.chart.destroy();
-    }
+  get displayedStats(): AggregateStats {
+    return this.pinStatsToAllTime ? this.allTimeStats : this.stats;
   }
 
-  formatDateForApi(dateString: string): string {
-    const dateParts = dateString.split('-');
-    const year = dateParts[0];
-    const month = dateParts[1];
-    const day = dateParts[2];
-    const formattedDate = `${year}-${month}-${day}`;
-    return formattedDate;
+  onFilterChange(): void {
+    this.loadStats();
   }
 
-  formatDateObjectForApi(date: string | Date): string {
-    if (typeof date === 'string') {
-      return date;
-    }
+  private loadStats(): void {
+    this.isLoading = true;
+    const { begDate, endDate } = this.getDateParams();
 
-    const year = date.getFullYear().toString();
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
-    const day = date.getDate().toString().padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
-  }
-  getWinningsAndDate(apiResponse: any) {
-    let winsAndDates = new Map();
-    apiResponse.forEach((session: any) => {
-      if (winsAndDates.get(session.date)) {
-        let i = 2;
-        while (winsAndDates.has(session.date + " session " + i)) {
-          i++;
+    this.statsService.getStats(this.pnId, begDate, endDate).subscribe({
+      next: (res: StatsResponse) => {
+        this.sessions = res.sessions;
+        this.stats = res.stats;
+        if (this.selectedFilter === 'all') {
+          this.allTimeStats = res.stats;
         }
-        winsAndDates.set(session.date + " session " + i, session.winnings);
-      } else {
-        winsAndDates.set(session.date, session.winnings);
-      }
-    })
-    return winsAndDates;
-  }
-
-  createLineChart(data: Map<string, number>) {
-    let pointBackgroundColors: any = [];
-    let [sessions, winnings] = this.getLineChartFormat(data);
-    this.chart = new Chart("WinningsOverTime", {
-      type: 'line',
-      data: {
-        labels: sessions,
-        datasets: [
-          {
-            label: "Winnings",
-            data: winnings,
-            backgroundColor: 'black',
-            borderColor: 'black',
-            pointBackgroundColor: pointBackgroundColors
-          }
-        ]
+        this.hasNoData = res.sessions.length === 0;
+        this.buildChartOptions();
+        this.isLoading = false;
       },
-      options: {
-        aspectRatio: 5
+      error: () => {
+        this.isLoading = false;
+        this.hasNoData = true;
       }
     });
-
-    let i = 0;
-
-    for (i = 0; i < this.chart.data.datasets[0].data.length; i++) {
-      if (this.chart.data.datasets[0].data[i] > 0) {
-        pointBackgroundColors.push("#90cd8a");
-      } else {
-        pointBackgroundColors.push("#f58368");
-      }
-    }
-
-    this.chart.update();
-
   }
 
-  getLineChartFormat(data: any): [string[], number[]] {
-    let sessions: string[] = [];
-    let winnings: number[] = [];
-    data.forEach((value: number, key: string) => {
-      sessions.push(key);
-      winnings.push(value);
-    })
+  private getDateParams(): { begDate?: string; endDate?: string } {
+    const today = new Date();
+    const fmt = (d: Date) => d.toISOString().split('T')[0];
 
-    return [sessions, winnings];
+    switch (this.selectedFilter) {
+      case 'week': {
+        const beg = new Date(today); beg.setDate(today.getDate() - 7);
+        return { begDate: fmt(beg), endDate: fmt(today) };
+      }
+      case 'month': {
+        const beg = new Date(today); beg.setMonth(today.getMonth() - 1);
+        return { begDate: fmt(beg), endDate: fmt(today) };
+      }
+      case 'year': {
+        const beg = new Date(today); beg.setFullYear(today.getFullYear() - 1);
+        return { begDate: fmt(beg), endDate: fmt(today) };
+      }
+      case 'custom':
+        return {
+          begDate: this.customBegDate || undefined,
+          endDate: this.customEndDate || undefined
+        };
+      default:
+        return {};
+    }
+  }
+
+  private buildChartOptions(): void {
+    const sorted = [...this.sessions].sort((a, b) => a.date.localeCompare(b.date));
+    const fmtVal = (v: number) => '$' + Math.round(v * 100) / 100;
+    const yAxisFmt = { labels: { formatter: (v: number) => '$' + v.toFixed(2) } };
+    const scrollToolbar = {
+      show: true,
+      autoSelected: 'pan',
+      tools: { download: false, selection: false, zoom: true, zoomin: true, zoomout: true, pan: true, reset: true }
+    };
+
+    // Line chart — session winnings
+    const discreteMarkers = sorted.map((s, i) => ({
+      seriesIndex: 0,
+      dataPointIndex: i,
+      fillColor: s.winnings >= 0 ? '#4caf50' : '#f44336',
+      strokeColor: s.winnings >= 0 ? '#4caf50' : '#f44336',
+      size: 6
+    }));
+    this.lineChartOptions = {
+      series: [{ name: 'Winnings', data: sorted.map(s => Math.round(s.winnings * 100) / 100) }],
+      chart: { type: 'line', height: '100%', background: '#121212', toolbar: scrollToolbar, zoom: { enabled: true } },
+      theme: { mode: 'dark' },
+      xaxis: { categories: sorted.map(s => s.date), labels: { rotate: -45 } },
+      yaxis: yAxisFmt,
+      markers: { size: 6, discrete: discreteMarkers },
+      stroke: { curve: 'smooth', colors: ['#BB86FC'] },
+      colors: ['#BB86FC'],
+      dataLabels: { enabled: false },
+      tooltip: { theme: 'dark', y: { formatter: fmtVal } },
+      title: { text: 'Session Winnings', style: { color: '#fff' } }
+    };
+
+    // Cumulative P&L area chart
+    let running = 0;
+    const cumulative = sorted.map(s => { running += s.winnings; return Math.round(running * 100) / 100; });
+    this.cumulativeChartOptions = {
+      series: [{ name: 'Cumulative P&L', data: cumulative }],
+      chart: { type: 'area', height: '100%', background: '#121212', toolbar: scrollToolbar, zoom: { enabled: true } },
+      theme: { mode: 'dark' },
+      xaxis: { categories: sorted.map(s => s.date), labels: { rotate: -45 } },
+      yaxis: yAxisFmt,
+      colors: ['#BB86FC'],
+      fill: { type: 'gradient', gradient: { opacityFrom: 0.4, opacityTo: 0.05 } },
+      dataLabels: { enabled: false },
+      tooltip: { theme: 'dark', y: { formatter: fmtVal } },
+      title: { text: 'Cumulative P&L', style: { color: '#fff' } }
+    };
+
+    // Donut chart — win/loss ratio
+    this.donutChartOptions = {
+      series: [this.stats.sessions_won, this.stats.sessions_lost],
+      chart: { type: 'donut', height: '100%', background: '#121212' },
+      theme: { mode: 'dark' },
+      labels: ['Winning Sessions', 'Losing Sessions'],
+      colors: ['#4caf50', '#f44336'],
+      dataLabels: { formatter: (val: number) => val.toFixed(1) + '%' },
+      tooltip: { theme: 'dark' },
+      title: { text: 'Win / Loss Ratio', style: { color: '#fff' } }
+    };
+
+    // Bar chart — monthly P&L
+    const monthMap: Record<string, number> = {};
+    for (const s of sorted) {
+      const month = s.date.substring(0, 7);
+      monthMap[month] = Math.round(((monthMap[month] || 0) + s.winnings) * 100) / 100;
+    }
+    const months = Object.keys(monthMap).sort();
+    const monthlyValues = months.map(m => monthMap[m]);
+    const barColors = monthlyValues.map(v => v >= 0 ? '#4caf50' : '#f44336');
+    this.barChartOptions = {
+      series: [{ name: 'Net P&L', data: monthlyValues }],
+      chart: { type: 'bar', height: '100%', background: '#121212', toolbar: { show: false } },
+      theme: { mode: 'dark' },
+      xaxis: { categories: months },
+      yaxis: yAxisFmt,
+      colors: ['#BB86FC'],
+      plotOptions: { bar: { distributed: true } },
+      fill: { colors: barColors },
+      dataLabels: { formatter: (v: number) => '$' + v.toFixed(2) },
+      tooltip: { theme: 'dark', y: { formatter: fmtVal } },
+      title: { text: 'Monthly P&L', style: { color: '#fff' } },
+      legend: { show: false }
+    };
+  }
+
+  sortColumn: keyof SessionRow = 'date';
+  sortDirection: 'asc' | 'desc' = 'desc';
+
+  sortBy(col: keyof SessionRow): void {
+    if (this.sortColumn === col) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = col;
+      this.sortDirection = 'asc';
+    }
+  }
+
+  get sortedSessions(): SessionRow[] {
+    return [...this.sessions].sort((a, b) => {
+      const aVal = a[this.sortColumn];
+      const bVal = b[this.sortColumn];
+      const cmp = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+      return this.sortDirection === 'asc' ? cmp : -cmp;
+    });
   }
 }

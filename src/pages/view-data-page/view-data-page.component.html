@@ -1,85 +1,183 @@
-<div class="wrapper">
-  <div class = 'container'>
-    <form [formGroup]="viewData" (ngSubmit)="getInfo()" class='form'>
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>View Data</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="formGroup">
-            <mat-form-field>
-              <input id="id" formControlName='id' matInput placeholder="ID"/>
-            </mat-form-field>
-          </div>
-          <div class="formGroup">
-            <mat-radio-group formControlName="option">
-              <mat-radio-button value="1">All Time</mat-radio-button>
-              <mat-radio-button value="2">Past Week</mat-radio-button>
-              <mat-radio-button value="3">Past Month</mat-radio-button>
-              <mat-radio-button value="4">Past Year</mat-radio-button>
-              <mat-radio-button value="5">Custom</mat-radio-button>
-            </mat-radio-group>
-          </div>
-          <div *ngIf="viewData.value.option === '5'" class="formGroup">
-            <label for="beg_date">Beginning Date: </label>
-            <input id="beg_date" type="date" formControlName="beg_date">
-          </div>
-          <div *ngIf="viewData.value.option === '5'" class="formGroup">
-            <label for="end_date">End Date: </label>
-            <input id="end_date" type="date" formControlName="end_date">
-          </div>
-          <button type="submit" class='submitButton' [disabled]="!viewData.valid">Submit</button>
-        </mat-card-content>
+<div class="page-container">
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <div class="filter-buttons">
+      <button [class.active]="selectedFilter === 'all'" (click)="selectedFilter = 'all'; onFilterChange()">All Time</button>
+      <button [class.active]="selectedFilter === 'week'" (click)="selectedFilter = 'week'; onFilterChange()">Past Week</button>
+      <button [class.active]="selectedFilter === 'month'" (click)="selectedFilter = 'month'; onFilterChange()">Past Month</button>
+      <button [class.active]="selectedFilter === 'year'" (click)="selectedFilter = 'year'; onFilterChange()">Past Year</button>
+      <button [class.active]="selectedFilter === 'custom'" (click)="selectedFilter = 'custom'">Custom</button>
+    </div>
+
+    <div class="custom-dates" *ngIf="selectedFilter === 'custom'">
+      <input type="date" [(ngModel)]="customBegDate" />
+      <input type="date" [(ngModel)]="customEndDate" />
+      <button class="apply-btn" (click)="onFilterChange()">Apply</button>
+    </div>
+
+    <div class="pin-toggle">
+      <mat-slide-toggle [(ngModel)]="pinStatsToAllTime" color="accent">
+        Pin stats to All Time
+      </mat-slide-toggle>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" *ngIf="isLoading">Loading...</div>
+
+  <ng-container *ngIf="!isLoading">
+
+    <!-- No Data -->
+    <div class="no-data" *ngIf="hasNoData">No data for this period</div>
+
+    <!-- Stat Cards -->
+    <div class="stats-grid" *ngIf="!hasNoData">
+      <mat-card class="stat-card">
+        <div class="stat-label">Total P&amp;L</div>
+        <div class="stat-value" [ngClass]="{'positive': displayedStats.total_pnl >= 0, 'negative': displayedStats.total_pnl < 0}">
+          {{ displayedStats.total_pnl | currency:'USD':'symbol':'1.2-2' }}
+        </div>
       </mat-card>
-    </form>
-  </div>
-  <div *ngIf="response" style="flex: auto">
-    <mat-grid-list cols="4" rowHeight="79:100">
-      <mat-grid-tile>
-        <mat-grid-tile-header>All Time Winnings</mat-grid-tile-header>
-        <h1>${{userStats.all_time_total}}</h1>
-      </mat-grid-tile>
-      <mat-grid-tile >
-        <mat-grid-tile-header>Average All Time Win/Loss</mat-grid-tile-header>
-        <h1>${{userStats.average_all_time_win_or_loss}}</h1>
-      </mat-grid-tile>
-      <mat-grid-tile>
-        <mat-grid-tile-header>Largest Amount Won in 1 Session</mat-grid-tile-header>
-        <h1>${{userStats.biggest_win}}</h1>
-        <mat-grid-tile-footer>{{userStats.date_of_biggest_win}}</mat-grid-tile-footer>
-      </mat-grid-tile>
-      <mat-grid-tile>
-        <mat-grid-tile-header>Largest Amount Lost in 1 Session</mat-grid-tile-header>
-        <h1>({{userStats.biggest_loss}})</h1>
-        <mat-grid-tile-footer>{{userStats.date_of_biggest_loss}}</mat-grid-tile-footer>
-      </mat-grid-tile>
-      <mat-grid-tile>
-        <mat-grid-tile-header># of positive sessions</mat-grid-tile-header>
-        <h1>{{userStats.number_of_sessions_positive}}</h1>
-        <mat-grid-tile-footer>{{userStats.positive_percentage}}%</mat-grid-tile-footer>
-      </mat-grid-tile>
-      <mat-grid-tile>
-        <mat-grid-tile-header># of negative sessions</mat-grid-tile-header>
-        <h1>{{userStats.number_of_sessions_negative}}</h1>
-        <mat-grid-tile-footer>{{userStats.negative_percentage}}%</mat-grid-tile-footer>
-      </mat-grid-tile>
-      <mat-grid-tile>
-        <mat-grid-tile-header>Total Sessions Played</mat-grid-tile-header>
-        <h1>{{userStats.total_sessions_played}}</h1>
-      </mat-grid-tile>
-    </mat-grid-list>
-  </div>
+
+      <mat-card class="stat-card">
+        <div class="stat-label">Avg Session P&amp;L</div>
+        <div class="stat-value" [ngClass]="{'positive': displayedStats.average_pnl >= 0, 'negative': displayedStats.average_pnl < 0}">
+          {{ displayedStats.average_pnl | currency:'USD':'symbol':'1.2-2' }}
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <div class="stat-label">Best Session</div>
+        <div class="stat-value positive">{{ displayedStats.biggest_win | currency:'USD':'symbol':'1.2-2' }}</div>
+        <div class="stat-sub">{{ displayedStats.date_of_biggest_win || '—' }}</div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <div class="stat-label">Worst Session</div>
+        <div class="stat-value negative">{{ displayedStats.biggest_loss | currency:'USD':'symbol':'1.2-2' }}</div>
+        <div class="stat-sub">{{ displayedStats.date_of_biggest_loss || '—' }}</div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <div class="stat-label">Win Rate</div>
+        <div class="stat-value" [ngClass]="{'positive': displayedStats.win_rate >= 50, 'negative': displayedStats.win_rate < 50}">
+          {{ displayedStats.win_rate | number:'1.1-1' }}%
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <div class="stat-label">Winning Sessions</div>
+        <div class="stat-value positive">{{ displayedStats.sessions_won }}</div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <div class="stat-label">Losing Sessions</div>
+        <div class="stat-value negative">{{ displayedStats.sessions_lost }}</div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <div class="stat-label">Total Sessions</div>
+        <div class="stat-value neutral">{{ displayedStats.total_sessions }}</div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <div class="stat-label">Total Buy-in</div>
+        <div class="stat-value neutral">{{ displayedStats.total_buy_in | currency:'USD':'symbol':'1.2-2' }}</div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <div class="stat-label">Buy-in ROI</div>
+        <div class="stat-value" [ngClass]="{'positive': displayedStats.roi >= 0, 'negative': displayedStats.roi < 0}">
+          {{ displayedStats.roi | number:'1.1-1' }}%
+        </div>
+      </mat-card>
+    </div>
+
+    <!-- Charts -->
+    <div class="charts-grid" *ngIf="!hasNoData">
+      <div class="chart-card">
+        <apx-chart
+          [series]="lineChartOptions.series"
+          [chart]="lineChartOptions.chart"
+          [xaxis]="lineChartOptions.xaxis"
+          [markers]="lineChartOptions.markers"
+          [stroke]="lineChartOptions.stroke"
+          [colors]="lineChartOptions.colors"
+          [tooltip]="lineChartOptions.tooltip"
+          [title]="lineChartOptions.title"
+          [theme]="lineChartOptions.theme">
+        </apx-chart>
+      </div>
+
+      <div class="chart-card">
+        <apx-chart
+          [series]="cumulativeChartOptions.series"
+          [chart]="cumulativeChartOptions.chart"
+          [xaxis]="cumulativeChartOptions.xaxis"
+          [colors]="cumulativeChartOptions.colors"
+          [fill]="cumulativeChartOptions.fill"
+          [tooltip]="cumulativeChartOptions.tooltip"
+          [title]="cumulativeChartOptions.title"
+          [theme]="cumulativeChartOptions.theme">
+        </apx-chart>
+      </div>
+
+      <div class="chart-card">
+        <apx-chart
+          [series]="donutChartOptions.series"
+          [chart]="donutChartOptions.chart"
+          [labels]="donutChartOptions.labels"
+          [colors]="donutChartOptions.colors"
+          [tooltip]="donutChartOptions.tooltip"
+          [title]="donutChartOptions.title"
+          [theme]="donutChartOptions.theme">
+        </apx-chart>
+      </div>
+
+      <div class="chart-card">
+        <apx-chart
+          [series]="barChartOptions.series"
+          [chart]="barChartOptions.chart"
+          [xaxis]="barChartOptions.xaxis"
+          [fill]="barChartOptions.fill"
+          [plotOptions]="barChartOptions.plotOptions"
+          [tooltip]="barChartOptions.tooltip"
+          [title]="barChartOptions.title"
+          [theme]="barChartOptions.theme"
+          [legend]="barChartOptions.legend">
+        </apx-chart>
+      </div>
+    </div>
+
+    <!-- Session Table -->
+    <div class="table-container" *ngIf="!hasNoData">
+      <h3 class="table-title">Session History</h3>
+      <table class="session-table">
+        <thead>
+          <tr>
+            <th (click)="sortBy('date')" class="sortable">
+              Date <span *ngIf="sortColumn === 'date'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+            </th>
+            <th (click)="sortBy('buy_in_amount')" class="sortable">
+              Buy-in <span *ngIf="sortColumn === 'buy_in_amount'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+            </th>
+            <th (click)="sortBy('winnings')" class="sortable">
+              Net Result <span *ngIf="sortColumn === 'winnings'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of sortedSessions">
+            <td>{{ s.date }}</td>
+            <td>{{ s.buy_in_amount | currency:'USD':'symbol':'1.2-2' }}</td>
+            <td [ngClass]="{'positive': s.winnings >= 0, 'negative': s.winnings < 0}">
+              {{ s.winnings | currency:'USD':'symbol':'1.2-2' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </ng-container>
 </div>
-<div *ngIf="shouldShowCard">
-  <div class="chart-container">
-    <mat-card class="chart-card">
-      <h1 class="mat-h1">Charts</h1>
-      <mat-card-content class="chart-content">
-          <canvas id="WinningsOverTime">{{chart}}</canvas>
-      </mat-card-content>
-    </mat-card>
-  </div>
-</div>
-
-
-

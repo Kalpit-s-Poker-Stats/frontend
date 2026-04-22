@@ -1,98 +1,197 @@
-@import "~bootstrap/dist/css/bootstrap.css";
-@import '~bootstrap/dist/css/bootstrap.min.css';
-
-.wrapper {
+.page-container {
   background-color: #121212;
-  width:100vw;
+  min-height: 100vh;
+  padding: 24px;
+  color: white;
+  font-family: 'Raleway', sans-serif;
+}
+
+/* Filter Bar */
+.filter-bar {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 32px;
 }
 
-  .container {
-      max-width: 500px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color:#121212;
-    }
+.filter-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
 
-  .form {
-    padding-top: 5%;
-    color: rgb(141, 141, 141);
-    font-family: 'Raleway',sans-serif;
-    font-size: 20px;
-  }
-
-  mat-card {
-    background-color: #181818;
-  }
-  mat-form-field {
-    width: 100%;
-  }
-  mat-card-title{
-    color: #BB86FC;
-  }
-  mat-grid-list{
-    color: white;
-  }
-  mat-grid-tile-header{
-    justify-content: center;
-  }
-  mat-grid-tile-footer{
-    justify-content: center;
-  }
-  .formGroup {
-    margin-top: 10%;
-    margin-bottom: 10%;
-    justify-content: center;
-  }
-
-  .submitButton {
-    width: 100%;
-  }
-
- button{
-  position: relative;
-  display: inline-block;
-  padding: 25px 30px;
-  border:none;
+.filter-buttons button {
+  padding: 8px 16px;
+  background: #1e1e1e;
+  color: #aaa;
+  border: 1px solid #333;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  letter-spacing: 4px;
-  color: whitesmoke;
-  font-size: 1.2rem;
+  transition: all 0.2s;
+}
+
+.filter-buttons button:hover,
+.filter-buttons button.active {
+  background: #BB86FC;
+  color: #121212;
+  border-color: #BB86FC;
+}
+
+.custom-dates {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.custom-dates input[type="date"] {
+  background: #1e1e1e;
+  color: white;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 6px 10px;
+}
+
+.apply-btn {
+  padding: 6px 14px;
+  background: #BB86FC;
+  color: #121212;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
   font-weight: bold;
-  transition: .2s;
-  overflow: hidden;
-  margin-right: 50px;
-  background-color: #121212;
 }
 
-button:hover{
-  background-color: whitesmoke;
-  color: #050801;
-  box-shadow: 0 0 5px whitesmoke,
-              0 0 25px whitesmoke,
-              0 0 50px whitesmoke,
-              0 0 200px whitesmoke;
-
-  -webkit-box-reflect: below 1px linear-gradient(transparent, #0005);
+.pin-toggle {
+  margin-left: auto;
+  color: #aaa;
 }
 
-  .entry_added {
-    display: flex;
-    justify-content: center;
-  }
-
-.more-button {
-  position: absolute;
-  top: 5px;
-  right: 10px;
+/* Loading / No Data */
+.loading,
+.no-data {
+  text-align: center;
+  color: #aaa;
+  font-size: 1.1rem;
+  padding: 48px 0;
 }
 
-.chart-container {
-  background-color: #121212;
-  height: 50vh;
-  width:90vw;
+/* Stat Cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 40px;
 }
+
+.stat-card {
+  background-color: #1e1e1e !important;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.stat-label {
+  color: #aaa;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.stat-sub {
+  font-size: 0.75rem;
+  color: #777;
+  margin-top: 4px;
+}
+
+.positive { color: #4caf50; }
+.negative { color: #f44336; }
+.neutral  { color: white; }
+
+/* Charts */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
 .chart-card {
-  width: 90vw;
-  height: 50vh;
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  padding: 16px;
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-card apx-chart {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Session Table */
+.table-container {
+  margin-bottom: 40px;
+}
+
+.table-title {
+  color: #BB86FC;
+  margin-bottom: 12px;
+}
+
+.session-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.session-table thead tr {
+  background-color: #1e1e1e;
+}
+
+.session-table th {
+  color: #BB86FC;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+}
+
+.session-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.session-table th.sortable:hover {
+  color: white;
+}
+
+.session-table tbody tr {
+  border-bottom: 1px solid #2a2a2a;
+  transition: background 0.15s;
+}
+
+.session-table tbody tr:nth-child(even) {
+  background-color: #1a1a1a;
+}
+
+.session-table tbody tr:hover {
+  background-color: #252525;
+}
+
+.session-table td {
+  padding: 10px 16px;
+  color: #ddd;
 }

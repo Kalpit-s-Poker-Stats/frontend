@@ -5,4 +5,5 @@ export interface User {
     picture?: string;
     discord_id?: string;
     discord_username?: string;
+    pn_id?: string;
 }

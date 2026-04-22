@@ -49,3 +49,9 @@ Thumbs.db
 
 # Claude Code
 .claude/
+
+# Spec workflow & agent tooling
+skills-lock.json
+.agents/
+.spec-workflow/
+specs/
